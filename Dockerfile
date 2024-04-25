@@ -7,8 +7,11 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /ana-demo
 
 COPY ./requirements.txt .
+
 RUN apt-get update -y && \
     apt-get install -y netcat-traditional && \
+    apt-get install -y nodejs && \
+    apt-get install -y npm && \
     pip install --upgrade pip && \
     pip install -r requirements.txt
 
