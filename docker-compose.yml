@@ -13,7 +13,18 @@ services:
     depends_on:
       - db
       - redis
-  
+      
+  frontend:
+    build: .
+    volumes:
+      - .:/ana-demo
+    env_file:
+      - ./.env
+    network_mode: host
+    command: python manage.py tailwind install && python manage.py tailwind start
+    depends_on:
+      - webapp
+    
   db:
     image: postgres:13
     volumes:
