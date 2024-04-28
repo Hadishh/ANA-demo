@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     # Local apps
     "chat",
     "theme",
+    "core"
 ]
 
 MIDDLEWARE = [
@@ -150,3 +152,10 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+# ANA Core config
+JINA_API_KEY = config("JINA_API_KEY")
+JINA_API_URL = config("JINA_API_URL")
+HELP_RESPONSE_PATH = os.path.join(BASE_DIR, "core/static/help_response.txt")
+FUNCTIONALITY_CLF_PROMPT_TEMP = os.path.join(BASE_DIR, "core/static/query_clf_template.txt")
