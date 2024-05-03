@@ -7,6 +7,7 @@ class JinaBot:
     def __init__(self):
         
         self.prompt_user_key = "$USER_MESSAGE"
+
     
     def __request(self, prompt):
         data = {
@@ -39,10 +40,45 @@ class JinaBot:
                     return choice['message']['content']
         return None 
 
-    def classify_query(self, user_message):
+    #functionality identifier
+    def exctract_functionality(self, user_message):
         with open(FUNCTIONALITY_CLF_PROMPT_TEMP, 'r') as f:
             template = f.read()
         prompt = template.replace(self.prompt_user_key, user_message)
         result = self.__request(prompt)
         
         return self.__extract_assistant_content(result).lower()
+
+    def extract_intent_type(self, user_message):
+        pred_dict ={
+                        'apology':'a',
+                        'direct order':'d',
+                        'factual question':'f', 
+                        'greeting':'g',
+                        'indirect order':'i',
+                        'feedback':'pn',
+                        'statement':'s',
+                        'yes/no question':'yn'
+                    }
+        return "apology"
+    def factuality_separate(self, user_message):
+        return "not factual question"
+    
+    def non_factual_categorize(self, user_message):
+        # Recipe request, 
+        # Joke request, 
+        # Weather request, 
+        # Timing request (what time is it/what day is it today), 
+        # Other
+        return "joke request"
+
+    def factual_categorize(self, user_message):
+        return "weather request"
+    
+    def yes_no_categorize(self, user_message):
+        return "weather request"
+    
+    def order_categorize(self, user_message):
+        return "calendar request"
+    
+    
