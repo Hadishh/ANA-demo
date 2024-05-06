@@ -163,3 +163,7 @@ HELP_RESPONSE_PATH = os.path.join(BASE_DIR, r"core\static\responses\help_respons
 FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\functionality_template.txt")
 INTENT_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\intent_template.txt")
 FACTUALIT_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\factuality_template.txt")
+NON_FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\non_factual_categories_template.txt")
+FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\factual_categories_template.txt")
+YESNO_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\yesno_categories_template.txt")
+ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\order_categories_template.txt")
