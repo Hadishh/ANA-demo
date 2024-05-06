@@ -3,8 +3,9 @@ import os
 
 from config.settings.base import JINA_API_KEY, \
         JINA_API_URL, \
-        FUNCTIONALITY_CLF_PROMPT_TEMP, \
-        INTENT_PROMPT_PATH
+        FUNCTIONALITY_CLF_PROMPT_PATH, \
+        INTENT_PROMPT_PATH, \
+        FACTUALIT_PROMPT_PATH
 
 class JinaBot:
     def __init__(self):
@@ -56,13 +57,13 @@ class JinaBot:
     
     #functionality identifier
     def exctract_functionality(self, user_message):
-        return self.__perform_action(FUNCTIONALITY_CLF_PROMPT_TEMP, user_message)
+        return self.__perform_action(FUNCTIONALITY_CLF_PROMPT_PATH, user_message)
 
     def extract_intent_type(self, user_message):
         return self.__perform_action(INTENT_PROMPT_PATH, user_message)
     
     def factuality_separate(self, user_message):
-        return "not factual question"
+        return self.__perform_action(FACTUALIT_PROMPT_PATH, user_message)
     
     def non_factual_categorize(self, user_message):
         # Recipe request, 
