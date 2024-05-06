@@ -1,7 +1,10 @@
 import requests
 import os
 
-from config.settings.base import JINA_API_KEY, JINA_API_URL, FUNCTIONALITY_CLF_PROMPT_TEMP
+from config.settings.base import JINA_API_KEY, \
+        JINA_API_URL, \
+        FUNCTIONALITY_CLF_PROMPT_TEMP, \
+        INTENT_PROMPT_PATH
 
 class JinaBot:
     def __init__(self):
@@ -40,27 +43,24 @@ class JinaBot:
                     return choice['message']['content']
         return None 
 
-    #functionality identifier
-    def exctract_functionality(self, user_message):
-        with open(FUNCTIONALITY_CLF_PROMPT_TEMP, 'r') as f:
+    def __load_template(self, path):
+        with open(path, 'r') as f:
             template = f.read()
+        return template
+    
+    def __perform_action(self, template_path, user_message):
+        template = self.__load_template(template_path)
         prompt = template.replace(self.prompt_user_key, user_message)
         result = self.__request(prompt)
-        
         return self.__extract_assistant_content(result).lower()
+    
+    #functionality identifier
+    def exctract_functionality(self, user_message):
+        return self.__perform_action(FUNCTIONALITY_CLF_PROMPT_TEMP, user_message)
 
     def extract_intent_type(self, user_message):
-        pred_dict ={
-                        'apology':'a',
-                        'direct order':'d',
-                        'factual question':'f', 
-                        'greeting':'g',
-                        'indirect order':'i',
-                        'feedback':'pn',
-                        'statement':'s',
-                        'yes/no question':'yn'
-                    }
-        return "apology"
+        return self.__perform_action(INTENT_PROMPT_PATH, user_message)
+    
     def factuality_separate(self, user_message):
         return "not factual question"
     
