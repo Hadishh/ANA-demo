@@ -157,5 +157,6 @@ CHANNEL_LAYERS = {
 # ANA Core config
 JINA_API_KEY = config("JINA_API_KEY")
 JINA_API_URL = config("JINA_API_URL")
+MPT_URL = config("MPT_URL")
 HELP_RESPONSE_PATH = os.path.join(BASE_DIR, "core/static/help_response.txt")
 FUNCTIONALITY_CLF_PROMPT_TEMP = os.path.join(BASE_DIR, "core/static/query_clf_template.txt")
