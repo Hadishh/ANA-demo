@@ -42,7 +42,8 @@ class ChatBot:
             return get_location_and_time()
     
     def __other_inquiry(self, message):
-        return "OTHER ANSWER"
+        mpt = MPT()
+        return mpt.query(message, self.conversation[-10:])
     
     def __calendar_request(self, message):
         return "reminder set"
