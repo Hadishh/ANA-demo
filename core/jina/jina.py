@@ -6,7 +6,8 @@ from config.settings.base import JINA_API_KEY, \
         FUNCTIONALITY_CLF_PROMPT_PATH, \
         INTENT_PROMPT_PATH, ORDER_CATEGORIZATION_PROMPT_PATH, \
         FACTUALIT_PROMPT_PATH, YESNO_CATEGORIZATION_PROMPT_PATH, \
-        NON_FACTUAL_CATEGORIZATION_PROMPT_PATH, FACTUAL_CATEGORIZATION_PROMPT_PATH
+        NON_FACTUAL_CATEGORIZATION_PROMPT_PATH, FACTUAL_CATEGORIZATION_PROMPT_PATH, \
+        TIMING_REQ_CATEGORIZATION_PROMPT_PATH
 
 class JinaBot:
     def __init__(self):
@@ -77,5 +78,8 @@ class JinaBot:
     
     def order_categorize(self, user_message):
         return self.__perform_action(ORDER_CATEGORIZATION_PROMPT_PATH, user_message)
+
+    def timing_request_categorize(self, user_message):
+        return self.__perform_action(TIMING_REQ_CATEGORIZATION_PROMPT_PATH, user_message) 
     
     

@@ -2,6 +2,9 @@ import os
 
 
 from core.jina.jina import JinaBot
+from core.mpt30b.mpt30b import MPT
+from core.weather.weather import Weather
+from core.utils import get_location_and_time, detect_day1
 from config.settings.base import HELP_RESPONSE_PATH
 
 class ChatBot:
@@ -18,18 +21,25 @@ class ChatBot:
         self.factual_categorizer = JinaBot()
         self.yes_no_categorizer = JinaBot()
         self.order_categorizer = JinaBot()
+        self.time_request_categorizer = JinaBot()
 
     def __create_joke(self, message):
-        return "HAHAHAHAHA"
+        mpt = MPT()
+        return mpt.query(message, self.conversation[-10:])
     
     def __create_recipe(self, message):
-        return "COOK PASTA"
+        mpt = MPT()
+        return mpt.query(message, self.conversation[-10:])
     
-    def __report_weather(self, mseeage):
-        return "Sunny"
+    def __report_weather(self, message):
+        return Weather().get_weather(message)
 
     def __report_time(self, message):
-        return "its 4pm"
+        category = self.time_request_categorizer.timing_request_categorize(message)
+        if 'day or date request' in category:
+            return detect_day1(message)
+        else:
+            return get_location_and_time()
     
     def __other_inquiry(self, message):
         return "OTHER ANSWER"

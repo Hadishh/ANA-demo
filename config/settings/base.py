@@ -167,3 +167,4 @@ NON_FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\pr
 FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\factual_categories_template.txt")
 YESNO_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\yesno_categories_template.txt")
 ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\order_categories_template.txt")
+TIMING_REQ_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core\static\prompts\timing_request_categories_template.txt")

@@ -1,0 +1,1 @@
+Please classify this text ""$USER_MESSAGE"" into one of these categories accurately: 'Time Request' (e.g., 'What time is it now?' or 'What's the current time in London?'), or 'Day or Date Request' (e.g., 'What is today's date?' or 'What day of the week is it?'). The system should only return the category label.
