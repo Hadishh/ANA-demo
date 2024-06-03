@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     # Local apps
     "chat",
     "theme",
+    "core"
 ]
 
 MIDDLEWARE = [
@@ -150,3 +152,30 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+# ANA Core config
+JINA_API_KEY = config("JINA_API_KEY")
+JINA_API_URL = config("JINA_API_URL")
+MPT_URL = config("MPT_URL")
+ALPACA_URL = config("ALPACA_URL")
+
+# Prompts
+FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/functionality_template.txt")
+INTENT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/intent_template.txt")
+FACTUALIT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/factuality_template.txt")
+NON_FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/non_factual_categories_template.txt")
+FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/factual_categories_template.txt")
+YESNO_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/yesno_categories_template.txt")
+ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/order_categories_template.txt")
+TIMING_REQ_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/timing_request_categories_template.txt")
+
+# Instructions
+EVENT_EXTRACTION_INSTRUCTION_PATH = os.path.join(BASE_DIR, r"core/static/instructions/event_extraction.txt")
+
+# Responses
+HELP_RESPONSE_PATH = os.path.join(BASE_DIR, r"core/static/responses/help_response.txt")
+
+
+CALENDAR_CREDS_PATH = os.path.join(BASE_DIR, r"core/static/credentials.json")
+TEMP_TOKEN_PATH = os.path.join(BASE_DIR, r"core/static/token.pkl")

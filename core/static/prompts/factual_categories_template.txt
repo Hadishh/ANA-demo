@@ -1,0 +1,2 @@
+Please carefully examine the provided text ""$USER_MESSAGE"" and assign it to one of the following categories: Recipe request, Weather request, Timing request (what time is it/what day is it today), Other (Any request that does not fit into the above categories.)
+return only the category assigned.

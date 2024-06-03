@@ -4,6 +4,7 @@ import json
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from .tasks import get_response
 
 class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
@@ -19,16 +20,7 @@ class ChatConsumer(WebsocketConsumer):
             },
         )
 
-        # We will later replace this call with a celery task that will
-        # use a Python library called ChatterBot to generate an automated
-        # response to a user's input.
-        async_to_sync(self.channel_layer.send)(
-            self.channel_name,
-            {
-                "type": "chat.message",
-                "text": {"msg": "Bot says hello", "source": "bot"},
-            },
-        )
+        get_response(self.channel_name, text_data_json)
 
     # Handles the chat.mesage event i.e. receives messages from the channel layer
     # and sends it back to the client.

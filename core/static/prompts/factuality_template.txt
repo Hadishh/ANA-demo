@@ -1,0 +1,2 @@
+Please carefully examine the provided text ""$USER_MESSAGE"" and assign it to one of the following categories: 'factual question' or 'not factual question'.
+return the assigned category

@@ -1,0 +1,12 @@
+Please carefully examine the intent of provided text ""$USER_MESSAGE"" and assign it to one of the following categories: 
+
+'factual question'
+'yes/no question'
+'apology'
+'direct order'
+'indirect order'
+'feedback'
+'statement'
+'greeting'
+
+return the assigned category.

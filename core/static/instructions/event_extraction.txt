@@ -1,0 +1,6 @@
+Detect the event and the time of the input : 
+example : remind me to go fishing at 17h next monday: {Event:go fishing , Time:17 , day:next monday} 
+example : remind me to go fishing next monday: {Event:go fishing , Time: , day:next monday} 
+example : remind me to go fishing at 17h: {Event:go fishing , Time:17 , day:} 
+example : i have an appointment with the doctor : {Event:an appointment with the doctor , Time: , day:} 
+example : i have to go to shopping tomorrow : {Event:go shopping , Time: , day:tomorrow}
