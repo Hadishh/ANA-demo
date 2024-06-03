@@ -99,7 +99,7 @@ def get_location_and_time():
     city = location_data['city']
 
     # Get current time in the timezone
-    local_time = datetime.now(pytz.timezone(timezone))
+    local_time = datetime.datetime.now(pytz.timezone(timezone))
 
     # Format the time
     formatted_time = local_time.strftime("%I:%M %p").lstrip("0")
@@ -121,7 +121,7 @@ def get_date(day):
         return "Invalid input. Please enter 'today', 'tomorrow', or 'next day'."
 
     # Get the current date and add 'n' days
-    date_n_days_ahead = datetime.today() + datetime.timedelta(days=n)
+    date_n_days_ahead = datetime.datetime.today() + datetime.timedelta(days=n)
 
     # Format the date
     formatted_date = date_n_days_ahead.strftime(f"{day} is %A, %B %d, %Y")
@@ -154,7 +154,7 @@ def get_date_from_sentence(sentence):
     # Check for special cases
     for case in SPECIAL_CASES:
         if case in sentence:
-            target_date = datetime.now() + datetime.timedelta(days=SPECIAL_CASES[case])
+            target_date = datetime.datetime.now() + datetime.timedelta(days=SPECIAL_CASES[case])
             return target_date.strftime(f"The date for {case} is %d/%m/%Y.")
 
     # Parse the day of the week from the sentence
@@ -169,13 +169,13 @@ def get_date_from_sentence(sentence):
         return "Invalid day of the week."
 
     # Get the current date
-    now = datetime.now()
+    now = datetime.datetime.now()
 
     # Get the weekday constant from the mapping
     weekday_constant = WEEKDAY_MAPPING[day_name]
 
     # Use dateutil's relativedelta to find the next specified day of the week
-    next_day = now + relativedelta(weekday=weekday_constant)
+    next_day = now + relativedelta.re(weekday=weekday_constant)
 
     # Format the date as DD/MM/YYYY
     formatted_date = next_day.strftime("%d/%m/%Y")

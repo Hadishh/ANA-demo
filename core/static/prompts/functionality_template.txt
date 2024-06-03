@@ -1,4 +1,4 @@
 Determine with high precision whether this text ""$USER_MESSAGE"" is:
 - Functionality Query (Example: 'What can you do?' or 'what tasks can you do?')
-- Other inquiry (Example: 'remind me to go to the cinema')
+- Other inquiry (Example: 'remind me to go to the cinema', or 'tell me a joke' or 'what time is it?')
 return only the assigned category.

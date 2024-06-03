@@ -82,4 +82,6 @@ class JinaBot:
     def timing_request_categorize(self, user_message):
         return self.__perform_action(TIMING_REQ_CATEGORIZATION_PROMPT_PATH, user_message) 
     
+    def extract_events_from_sentnece(self, user_message):
+        return self.__perform_action(EVENT_EXTRACTION_PROMPT_PATH, user_message)
     

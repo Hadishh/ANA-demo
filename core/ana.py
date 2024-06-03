@@ -2,17 +2,20 @@ import os
 
 
 from core.jina.jina import JinaBot
+from core.alpaca_lora.alpaca_lora import AlpacaLora
 from core.mpt30b.mpt30b import MPT
 from core.weather.weather import Weather
+from core.calendar.calendar import Calendar
 from core.utils import get_location_and_time, detect_day1
 from config.settings.base import HELP_RESPONSE_PATH
 
 class ChatBot:
-    def __init__(self, conversation=[]) -> None:
+    def __init__(self, conversation=[], dictionary='') -> None:
         with open(HELP_RESPONSE_PATH, 'r') as f:
             self.help_response = f.read()
         
         self.conversation = conversation
+        self.dictionary = dictionary
 
         self.functionality_identifier = JinaBot()
         self.intent_classifier = JinaBot()
@@ -22,14 +25,15 @@ class ChatBot:
         self.yes_no_categorizer = JinaBot()
         self.order_categorizer = JinaBot()
         self.time_request_categorizer = JinaBot()
+        self.event_extractor = AlpacaLora()
 
     def __create_joke(self, message):
         mpt = MPT()
-        return mpt.query(message, self.conversation[-10:])
+        return mpt.query(message, self.conversation[-min(10, len(self.conversation)):])
     
     def __create_recipe(self, message):
         mpt = MPT()
-        return mpt.query(message, self.conversation[-10:])
+        return mpt.query(message, self.conversation[-min(10, len(self.conversation)):])
     
     def __report_weather(self, message):
         return Weather().get_weather(message)
@@ -43,10 +47,26 @@ class ChatBot:
     
     def __other_inquiry(self, message):
         mpt = MPT()
-        return mpt.query(message, self.conversation[-10:])
+        return mpt.query(message, self.conversation[-min(10, len(self.conversation)):])
     
     def __calendar_request(self, message):
-        return "reminder set"
+        response = self.event_extractor.extract_events(message)
+        response = response.lower()
+        response = response.strip('{}') 
+        response = response.split(',') 
+
+        dictionary_data = {}
+        for split in response:
+            key, value = map(str.strip, split.split(':')) # diviser par deux points et supprimer les espaces supplémentaires
+            if value: # ajouter seulement la paire clé-valeur au dictionnaire si la valeur n'est pas vide
+                dictionary_data[key] = value
+        calendar = Calendar(dictionary_data)
+
+        response, completed = calendar.add_event(message)
+        if not completed:
+            self.dictionary = self.dictionary + ' ' + message
+        
+        return response
     
     def __grocery_list(self, message):
         return "grocery changes done."
@@ -88,19 +108,20 @@ class ChatBot:
             return self.__factual_answer(message)
         
     def __greeting(self, message):
-        return self.__other_inquiry(self, message)
+        return self.__other_inquiry(message)
     
 
-    def answer(self, message, dictionary):
+    def answer(self, message):
         inquiry_type = self.functionality_identifier.exctract_functionality(message)
         
-
+        print(inquiry_type)
         # no prev request ongoing
-        if dictionary == '':
+        if self.dictionary == '':
             if "functionality query" in inquiry_type:
-                return self.help_response, dictionary
+                return self.help_response
             else:
                 intent_type = self.intent_classifier.extract_intent_type(message)
+                print(intent_type)
                 if "factual question" in intent_type:                    
                     #WEIRD
                     factuality = self.factuality_separator.factuality_separate(message)
@@ -126,10 +147,11 @@ class ChatBot:
                 
                 elif "apology" in intent_type or "feedback" in intent_type:
                     response = self.__other_inquiry(message)
+            return response
                 
         else:
             #TODO
             #resume the calendar or grocery requests
             pass
-        return inquiry_type
+            return "ELSE"
         
