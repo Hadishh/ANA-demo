@@ -17,13 +17,13 @@ def get_response(channel_name, input_data):
     else:
         dictionary = Dictionary.objects.all().values()[0]['text']
     
-    chatbot = ChatBot(conversation=conversation, dictionary=dictionary)
-    answer = chatbot.answer(input_data['text'])
+    # chatbot = ChatBot(conversation=conversation, dictionary=dictionary)
+    # answer = chatbot.answer(input_data['text'])
 
     async_to_sync(channel_layer.send)(
         channel_name,
         {
             "type": "chat.message",
-            "text": {"msg": answer, "source": "bot"},
+            "text": {"msg": "HI HOW CAN I HELP YOU?", "source": "bot"},
         },
     )

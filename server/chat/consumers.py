@@ -9,16 +9,16 @@ from .tasks import get_response
 class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-
+        print(text_data)
         # The consumer ChatConsumer is synchronous while the channel layer
         # methods are asynchronous. Therefore wrap the methods in async-to-sync
-        async_to_sync(self.channel_layer.send)(
-            self.channel_name,
-            {
-                "type": "chat_message",
-                "text": {"msg": text_data_json["text"], "source": "user"},
-            },
-        )
+        # async_to_sync(self.channel_layer.send)(
+        #     self.channel_name,
+        #     {
+        #         "type": "chat_message",
+        #         "text": {"msg": text_data_json["text"], "source": "user"},
+        #     },
+        # )
 
         get_response(self.channel_name, text_data_json)
 
