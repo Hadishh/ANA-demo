@@ -51,7 +51,7 @@ class LoginAPIView(APIView):
         response.set_cookie(key='jwt', value=token, httponly=True)  #httonly - frontend can't access cookie, only for backend
 
         response.data = {
-            'jwt token': token
+            'token': token
         }
 
         #if password correct
