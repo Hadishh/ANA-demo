@@ -1,0 +1,39 @@
+/* ChatInput.css */
+
+.chat-input-form {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  resize: none; /* Prevent resizing */
+  overflow-y: auto; /* Enable vertical scrollbar */
+  max-height: 150px; /* Adjust the maximum height as needed */
+}
+
+.send-button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  
+}
+
+.send-button:disabled {
+  background-color: #ccc; /* Change the background color when disabled */
+  cursor: not-allowed; /* Change the cursor to indicate the button is disabled */
+  color: #666; /* Change the text color when disabled */
+}
+
+.send-button:hover:enabled {
+  background-color: #0056b3; /* Background color on hover when enabled */
+}
