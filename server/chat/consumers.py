@@ -5,6 +5,8 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from .tasks import get_response
+from users.models import User
+from .models import Message
 
 class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
@@ -20,7 +22,13 @@ class ChatConsumer(WebsocketConsumer):
         #     },
         # )
 
-        get_response(self.channel_name, text_data_json)
+        user = self.scope['user']
+        new_message = Message.objects.create(owner=user, text=text_data_json["text"], source="user")
+        new_message.save()
+        
+        get_response(self.channel_name, text_data_json, user)
+
+
 
     # Handles the chat.mesage event i.e. receives messages from the channel layer
     # and sends it back to the client.
