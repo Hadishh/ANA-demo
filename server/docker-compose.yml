@@ -2,16 +2,16 @@
 services:
   webapp:
     build: .
+    # python -m spacy download en_core_web_sm &&
     command: >
-      sh -c "python -m spacy download en_core_web_sm &&
-             python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/ana-demo
     env_file:
       - ./.env
     ports:
       - 8000:8000
-    network_mode: host
+    # network_mode: host
     depends_on:
       - db
       - redis
@@ -24,20 +24,20 @@ services:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
-    network_mode: host
+    # network_mode: host
     ports:
      - 5432:5432
   
   redis:
     image: redis:7
-    network_mode: host
+    # network_mode: host
     ports:
       - 6379:6379
   
   celery:
     build: .
     command: celery -A config worker -l info
-    network_mode: host
+    # network_mode: host
     volumes:
       - .:/code
     env_file:
