@@ -42,7 +42,7 @@ class ChatBot:
     
     def __report_weather(self, message):
 
-        return Weather().get_weather(message), "other"
+        return Weather().get_weather(message), "weather"
 
     def __report_time(self, message):
         category = self.time_request_categorizer.timing_request_categorize(message)
@@ -79,7 +79,7 @@ class ChatBot:
     
     def __question_answer(self, message):
         question_category = self.question_categorizer.question_categorize(message)
-        if "wather request" in question_category:
+        if "weather request" in question_category:
             return self.__report_weather(message)
         elif "joke request" in question_category:
             return self.__create_joke(message)

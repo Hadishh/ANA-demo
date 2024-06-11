@@ -12,6 +12,7 @@ class Message(models.Model):
         ("read book", "read book"),
         ("story", "story"),
         ("phone", "phone"),
+        ("weather", "weather"),
         ("other", "other")
     )
     owner = models.ForeignKey(User, related_name="owner", on_delete=models.CASCADE)
