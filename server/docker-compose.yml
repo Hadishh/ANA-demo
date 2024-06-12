@@ -2,9 +2,11 @@
 services:
   webapp:
     build: .
-    # python -m spacy download en_core_web_sm &&
+    # 
     command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      sh -c "
+            python -m spacy download en_core_web_sm &&
+            python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/ana-demo
     env_file:

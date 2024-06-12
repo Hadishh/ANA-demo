@@ -41,8 +41,9 @@ class ChatBot:
         return mpt.query(message, self.conversation[-min(10, len(self.conversation)):]), "other"
     
     def __report_weather(self, message):
-
-        return Weather().get_weather(message), "weather"
+        weather_info = Weather().get_weather(message)
+        llama = Llama()
+        return llama.report_weather(weather_info), "weather"
 
     def __report_time(self, message):
         category = self.time_request_categorizer.timing_request_categorize(message)
@@ -54,28 +55,6 @@ class ChatBot:
     def __other_inquiry(self, message):
         mpt = MPT()
         return mpt.query(message, self.conversation[-min(10, len(self.conversation)):]), "other"
-    
-    def __calendar_request(self, message):
-        response = self.event_extractor.extract_events(message)
-        response = response.lower()
-        response = response.strip('{}') 
-        response = response.split(',') 
-
-        dictionary_data = {}
-        for split in response:
-            key, value = map(str.strip, split.split(':')) # diviser par deux points et supprimer les espaces supplémentaires
-            if value: # ajouter seulement la paire clé-valeur au dictionnaire si la valeur n'est pas vide
-                dictionary_data[key] = value
-        calendar = Calendar(dictionary_data)
-
-        response, completed = calendar.add_event(message)
-        if not completed:
-            self.dictionary = self.dictionary + ' ' + message
-        
-        return response
-    
-    def __grocery_list(self, message):
-        return "grocery changes done."
     
     def __question_answer(self, message):
         question_category = self.question_categorizer.question_categorize(message)
@@ -97,10 +76,6 @@ class ChatBot:
         question_category = self.order_categorizer.order_categorize(message)
         if "joke request" in question_category:
             return self.__create_joke(message)
-        elif "calendar request" in question_category:
-            return self.__calendar_request(message)
-        elif "grocery list" in question_category:
-            return self.__grocery_list(message)
         else:
             return self.__question_answer(message)
         

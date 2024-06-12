@@ -176,6 +176,7 @@ INTENT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/intent_templat
 FACTUALIT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/factuality_template.txt")
 NON_FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/non_factual_categories_template.txt")
 QUESTION_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/question_categories_template.txt")
+WEATHER_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/weather_template.txt")
 CREATE_JOKE_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/joke_prompt.txt")
 YESNO_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/yesno_categories_template.txt")
 ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/order_categories_template.txt")

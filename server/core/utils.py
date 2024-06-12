@@ -193,4 +193,4 @@ def detect_day1(sentence):
     elif "next day" in sentence:
         return get_date("next day")
     else:
-        return "No specific day found in sentence."
+        return get_date("today")

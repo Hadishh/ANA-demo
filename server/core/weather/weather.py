@@ -31,7 +31,7 @@ class Weather:
         if detect_day(input):
             day = detect_day(input)
         else :
-            day = ''  
+            day = 'today'  
         if detect_time(input):
             time = detect_time(input)
         else :
