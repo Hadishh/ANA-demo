@@ -7,7 +7,7 @@ from config.settings.base import JINA_API_KEY, \
         INTENT_PROMPT_PATH, ORDER_CATEGORIZATION_PROMPT_PATH, \
         FACTUALIT_PROMPT_PATH, YESNO_CATEGORIZATION_PROMPT_PATH, \
         NON_FACTUAL_CATEGORIZATION_PROMPT_PATH, QUESTION_CATEGORIZATION_PROMPT_PATH, \
-        TIMING_REQ_CATEGORIZATION_PROMPT_PATH
+        TIMING_REQ_PROMPT_PATH
 
 class JinaBot:
     def __init__(self):
@@ -80,8 +80,8 @@ class JinaBot:
         return self.__perform_action(ORDER_CATEGORIZATION_PROMPT_PATH, user_message)
 
     def timing_request_categorize(self, user_message):
-        return self.__perform_action(TIMING_REQ_CATEGORIZATION_PROMPT_PATH, user_message) 
+        return self.__perform_action(TIMING_REQ_PROMPT_PATH, user_message) 
     
     def extract_events_from_sentnece(self, user_message):
-        return self.__perform_action(EVENT_EXTRACTION_PROMPT_PATH, user_message)
+        return "T"
     
