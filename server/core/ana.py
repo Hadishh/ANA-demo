@@ -1,5 +1,6 @@
 import os
-
+import pytz
+from datetime import datetime
 
 from core.jina.jina import JinaBot
 from core.llama.llama import Llama
@@ -46,11 +47,9 @@ class ChatBot:
         return llama.report_weather(weather_info), "weather"
 
     def __report_time(self, message):
-        category = self.time_request_categorizer.timing_request_categorize(message)
-        if 'day or date request' in category:
-            return detect_day1(message), "other"
-        else:
-            return get_location_and_time(), "other"
+        llama = Llama()
+        return llama.report_datetime(message), "other"
+
     
     def __other_inquiry(self, message):
         mpt = MPT()
@@ -62,7 +61,7 @@ class ChatBot:
             return self.__report_weather(message)
         elif "joke request" in question_category:
             return self.__create_joke(message)
-        elif "timing request" in question_category:
+        elif "date or time request" in question_category:
             return self.__report_time(message)
         elif "recipe request" in question_category:
             return self.__create_recipe(message)

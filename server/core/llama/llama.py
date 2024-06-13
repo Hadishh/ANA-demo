@@ -9,14 +9,15 @@ from config.settings.base import JINA_API_KEY, \
         INTENT_PROMPT_PATH, ORDER_CATEGORIZATION_PROMPT_PATH, \
         FACTUALIT_PROMPT_PATH, YESNO_CATEGORIZATION_PROMPT_PATH, \
         NON_FACTUAL_CATEGORIZATION_PROMPT_PATH, QUESTION_CATEGORIZATION_PROMPT_PATH, CREATE_JOKE_PROMPT_PATH, \
-        TIMING_REQ_CATEGORIZATION_PROMPT_PATH
+        TIMING_REQ_PROMPT_PATH
 
 class Llama():
     def __init__(self):
         
         self.prompt_user_key = "$USER_MESSAGE"
-        self.date_time_now_key = "$DATE_TIME_NOW"
+        self.present_time_key = "$PRESENT_TIME"
         self.previous_conv_key = "$PREVIOUS_CONVERSATION"
+
     def __request(self, prompt, config):
         data = {
             "prompt": prompt,
@@ -26,6 +27,7 @@ class Llama():
         response = requests.post(LLAMA_API_URL, json=data)
 
         return response.json()
+    
     
     def __extract_assistant_content(self, data:str):
         data = data.split("<|start_header_id|>assistant<|end_header_id|>")[-1].strip()
@@ -86,3 +88,19 @@ class Llama():
     def report_weather(self, user_message):
         config = {"max_new_tokens" : 256}
         return self.__perform_action(WEATHER_PROMPT_PATH, user_message, config)
+    
+    def report_datetime(self, user_message):
+        config = {"max_new_tokens" : 1024}
+        edmn_tz = pytz.timezone("America/Edmonton")
+        now = datetime.now(tz=edmn_tz)
+        now = now.strftime("Today is %A, %d of %B.\nCurrent time is %H:%M.")
+
+        template = self.__load_template(TIMING_REQ_PROMPT_PATH)
+        prompt = template.replace(self.present_time_key, now).replace(self.prompt_user_key, user_message)
+        response = self.__request(prompt, config)
+        response = self.__extract_assistant_content(response["response"])
+
+        return response
+
+
+
