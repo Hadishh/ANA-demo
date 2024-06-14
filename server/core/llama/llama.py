@@ -6,7 +6,7 @@ import pytz
 from config.settings.base import JINA_API_KEY, \
         LLAMA_API_URL, \
         FUNCTIONALITY_CLF_PROMPT_PATH, GREETING_PROMPT, WEATHER_PROMPT_PATH, \
-        INTENT_PROMPT_PATH, ORDER_CATEGORIZATION_PROMPT_PATH, \
+        INTENT_PROMPT_PATH, ORDER_CATEGORIZATION_PROMPT_PATH, BOOK_NAME_PROMPT_PATH, \
         FACTUALIT_PROMPT_PATH, YESNO_CATEGORIZATION_PROMPT_PATH, \
         NON_FACTUAL_CATEGORIZATION_PROMPT_PATH, QUESTION_CATEGORIZATION_PROMPT_PATH, CREATE_JOKE_PROMPT_PATH, \
         TIMING_REQ_PROMPT_PATH
@@ -89,6 +89,10 @@ class Llama():
         config = {"max_new_tokens" : 256}
         return self.__perform_action(WEATHER_PROMPT_PATH, user_message, config)
     
+    def extract_book_name(self, user_message):
+        config = {"max_new_tokens" : 32}
+        return self.__perform_action(BOOK_NAME_PROMPT_PATH, user_message, config)
+
     def report_datetime(self, user_message):
         config = {"max_new_tokens" : 1024}
         edmn_tz = pytz.timezone("America/Edmonton")

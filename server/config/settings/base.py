@@ -177,11 +177,13 @@ FACTUALIT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/factuality_
 NON_FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/non_factual_categories_template.txt")
 QUESTION_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/question_categories_template.txt")
 WEATHER_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/weather_template.txt")
+BOOK_NAME_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/book_details_template.txt")
 CREATE_JOKE_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/joke_prompt.txt")
 YESNO_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/yesno_categories_template.txt")
 ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/order_categories_template.txt")
 TIMING_REQ_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/timing_request_categories_template.txt")
 
+BOOKS_ROOT_DIR = r"core/static/books"
 # Instructions
 EVENT_EXTRACTION_INSTRUCTION_PATH = os.path.join(BASE_DIR, r"core/static/instructions/event_extraction.txt")
 

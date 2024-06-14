@@ -7,9 +7,9 @@ from core.llama.llama import Llama
 from core.alpaca_lora.alpaca_lora import AlpacaLora
 from core.mpt30b.mpt30b import MPT
 from core.weather.weather import Weather
-from core.calendar.calendar import Calendar
+from core.library.book_reading import BookReader
 from core.utils import get_location_and_time, detect_day1
-from config.settings.base import HELP_RESPONSE_PATH
+from config.settings.base import HELP_RESPONSE_PATH, BOOKS_ROOT_DIR
 from chat.models import Message
 class ChatBot:
     def __init__(self, user, conversation=[], dictionary='') -> None:
@@ -30,6 +30,7 @@ class ChatBot:
         self.order_categorizer = JinaBot()
         self.time_request_categorizer = JinaBot()
         self.event_extractor = AlpacaLora()
+        self.book_names_extractor = Llama()
 
     def __create_joke(self, message):
         llama = Llama()
@@ -37,9 +38,6 @@ class ChatBot:
         prev_jokes = [p.text for p in prev_jokes][- min(len(prev_jokes), 5):]
         return llama.create_joke(message, previous_jokes=prev_jokes), "joke"
     
-    def __create_recipe(self, message):
-        mpt = MPT()
-        return mpt.query(message, self.conversation[-min(10, len(self.conversation)):]), "other"
     
     def __report_weather(self, message):
         weather_info = Weather().get_weather(message)
@@ -50,6 +48,15 @@ class ChatBot:
         llama = Llama()
         return llama.report_datetime(message), "other"
 
+    def __read_book(self, message):
+        llama = Llama()
+        details = llama.extract_book_name(message)
+        book_name, chapter_num = tuple(details.split(";"))
+        chapter_num = int(chapter_num.strip()) if chapter_num.strip().isdecimal() else 1
+        book_name = book_name.lower()
+        reader = BookReader(book_name, chapter_num)
+        response = reader.read_book()
+        return response, "read book"
     
     def __other_inquiry(self, message):
         mpt = MPT()
@@ -63,8 +70,8 @@ class ChatBot:
             return self.__create_joke(message)
         elif "date or time request" in question_category:
             return self.__report_time(message)
-        elif "recipe request" in question_category:
-            return self.__create_recipe(message)
+        elif "reading a book" in question_category:
+            return self.__read_book(message)
         else:
             return self.__other_inquiry(message)
 
