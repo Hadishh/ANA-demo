@@ -8,7 +8,7 @@ from config.settings.base import JINA_API_KEY, \
         FUNCTIONALITY_CLF_PROMPT_PATH, GREETING_PROMPT, WEATHER_PROMPT_PATH, \
         INTENT_PROMPT_PATH, ORDER_CATEGORIZATION_PROMPT_PATH, BOOK_NAME_PROMPT_PATH, \
         FACTUALIT_PROMPT_PATH, YESNO_CATEGORIZATION_PROMPT_PATH, \
-        NON_FACTUAL_CATEGORIZATION_PROMPT_PATH, QUESTION_CATEGORIZATION_PROMPT_PATH, CREATE_JOKE_PROMPT_PATH, \
+        CONTEXT_PROMPT_PATH, QUESTION_CATEGORIZATION_PROMPT_PATH, CREATE_JOKE_PROMPT_PATH, \
         TIMING_REQ_PROMPT_PATH
 
 class Llama():
@@ -93,6 +93,19 @@ class Llama():
         config = {"max_new_tokens" : 32}
         return self.__perform_action(BOOK_NAME_PROMPT_PATH, user_message, config)
 
+    def extract_context(self, user_message, chat_history):
+        config = {"max_new_tokens" : 1024}
+        chat_history = [h.replace("\n", "") for h in chat_history]
+        chat_history = "\n".join(chat_history)
+
+        template = self.__load_template(CONTEXT_PROMPT_PATH)
+        prompt = template.replace(self.previous_conv_key, chat_history).replace(self.prompt_user_key, user_message)
+        response = self.__request(prompt, config)
+        response = self.__extract_assistant_content(response["response"])
+        response = response.strip()
+
+        return response
+
     def report_datetime(self, user_message):
         config = {"max_new_tokens" : 1024}
         edmn_tz = pytz.timezone("America/Edmonton")
@@ -107,4 +120,5 @@ class Llama():
         return response
 
 
-
+    def other_inquiry(self, message, chat_history):
+        pass

@@ -1,7 +1,9 @@
 <|begin_of_text|>
 <|start_header_id|>system<|end_header_id|>
 Based on the given information generate a weather report for the city and the time. 
-Do not add any information. Just paraphrase the given sentence. 
+Do not add any conversation like "Here is the weather report."
+
+Just paraphrase the given sentence. 
 <|eot_id|>
 
 <|start_header_id|>user<|end_header_id|>

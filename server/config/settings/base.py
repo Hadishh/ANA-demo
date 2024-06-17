@@ -174,6 +174,7 @@ FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/fun
 GREETING_PROMPT = os.path.join(BASE_DIR, r"core/static/prompts/greet_template.txt")
 INTENT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/intent_template.txt")
 FACTUALIT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/factuality_template.txt")
+CONTEXT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/context_extraction_template.txt")
 NON_FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/non_factual_categories_template.txt")
 QUESTION_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/question_categories_template.txt")
 WEATHER_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/weather_template.txt")

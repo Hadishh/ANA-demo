@@ -31,6 +31,7 @@ class ChatBot:
         self.time_request_categorizer = JinaBot()
         self.event_extractor = AlpacaLora()
         self.book_names_extractor = Llama()
+        self.context_extraction = Llama()
 
     def __create_joke(self, message):
         llama = Llama()
@@ -59,8 +60,11 @@ class ChatBot:
         return response, "read book"
     
     def __other_inquiry(self, message):
-        mpt = MPT()
-        return mpt.query(message, self.conversation[-min(10, len(self.conversation)):]), "other"
+        llama = Llama()
+        chat_history = Message.objects.filter(owner=self.user).order_by("date")
+        chat_history = [f"{q.source}:{q.text[:500].replace(':', '.')}" for q in chat_history][-min(len(chat_history), 10):]
+                
+        return llama.other_inquiry(message, chat_history), "other"
     
     def __question_answer(self, message):
         question_category = self.question_categorizer.question_categorize(message)
@@ -98,6 +102,11 @@ class ChatBot:
             if "functionality query" in inquiry_type:
                 return self.help_response, "other"
             else:
+                chat_history = Message.objects.filter(owner=self.user).order_by("date")
+                chat_history = [f"{q.source}:{q.text[:500].replace(':', '.')}" for q in chat_history][-min(len(chat_history), 10):]
+                
+                context = self.context_extraction.extract_context(message, chat_history)
+                message = context
                 intent_type = self.intent_classifier.extract_intent_type(message)
                 if "asking a question" in intent_type:
                     response = self.__question_answer(message)
@@ -105,7 +114,6 @@ class ChatBot:
                     response = self.__greeting(message)
                 elif "statement" in intent_type:
                     response = self.__order_answer(message)
-                
                 elif "apology" in intent_type or "feedback" in intent_type:
                     response = self.__other_inquiry(message)
             return response
