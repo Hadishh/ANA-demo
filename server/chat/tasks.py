@@ -17,10 +17,11 @@ def get_response(channel_name, input_data, user):
     # else:
     #     dictionary = Dictionary.objects.all().values()[0]['text']
     
-    # # chatbot = ChatBot(conversation=conversation, dictionary=dictionary)
-    # answer = chatbot.answer(input_data['text'])
-
-    answer = "HI HOW CAN I HELP YOU?"
+    chatbot = ChatBot(user=user)
+    answer, type_ = chatbot.answer(input_data['text'])
+    new_message = Message.objects.create(owner=user, text=input_data["text"], source="user", type=type_)
+    new_message.save()
+    # answer = "HI HOW CAN I HELP YOU?"
     async_to_sync(channel_layer.send)(
         channel_name,
         {
@@ -29,5 +30,5 @@ def get_response(channel_name, input_data, user):
         },
     )
 
-    new_message = Message.objects.create(owner=user, text=answer, source="bot")
+    new_message = Message.objects.create(owner=user, text=answer, source="bot", type=type_)
     new_message.save()
