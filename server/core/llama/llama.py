@@ -7,7 +7,7 @@ from config.settings.base import JINA_API_KEY, \
         LLAMA_API_URL, \
         FUNCTIONALITY_CLF_PROMPT_PATH, GREETING_PROMPT, WEATHER_PROMPT_PATH, \
         INTENT_PROMPT_PATH, ORDER_CATEGORIZATION_PROMPT_PATH, BOOK_NAME_PROMPT_PATH, \
-        FACTUALIT_PROMPT_PATH, YESNO_CATEGORIZATION_PROMPT_PATH, \
+        FACTUALIT_PROMPT_PATH, OTHER_INQUIRY_PROMPT_PATH, \
         CONTEXT_PROMPT_PATH, QUESTION_CATEGORIZATION_PROMPT_PATH, CREATE_JOKE_PROMPT_PATH, \
         TIMING_REQ_PROMPT_PATH
 
@@ -104,6 +104,8 @@ class Llama():
         response = self.__extract_assistant_content(response["response"])
         response = response.strip()
 
+        if "@@##" in response:
+            response = user_message
         return response
 
     def report_datetime(self, user_message):
@@ -121,4 +123,14 @@ class Llama():
 
 
     def other_inquiry(self, message, chat_history):
-        pass
+        config = {"max_new_tokens" : 2048}
+
+        chat_history = [h.replace("\n", "") for h in chat_history]
+        chat_history = "\n".join(chat_history)
+
+        template = self.__load_template(OTHER_INQUIRY_PROMPT_PATH)
+        prompt = template.replace(self.previous_conv_key, chat_history).replace(self.prompt_user_key, message)
+        response = self.__request(prompt, config)
+        response = self.__extract_assistant_content(response["response"])
+
+        return response

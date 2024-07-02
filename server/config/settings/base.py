@@ -180,7 +180,7 @@ QUESTION_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/promp
 WEATHER_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/weather_template.txt")
 BOOK_NAME_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/book_details_template.txt")
 CREATE_JOKE_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/joke_prompt.txt")
-YESNO_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/yesno_categories_template.txt")
+OTHER_INQUIRY_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/other_inquiry_template.txt")
 ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/order_categories_template.txt")
 TIMING_REQ_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/timing_request_categories_template.txt")
 

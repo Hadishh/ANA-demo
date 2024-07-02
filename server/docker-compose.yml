@@ -1,8 +1,7 @@
-
 services:
   webapp:
     build: .
-    # 
+    #
     command: >
       sh -c "
             python -m spacy download en_core_web_sm &&
@@ -17,7 +16,7 @@ services:
     depends_on:
       - db
       - redis
-    
+
   db:
     image: postgres:13
     volumes:
@@ -28,14 +27,14 @@ services:
       - POSTGRES_DB=${DB_NAME}
     # network_mode: host
     ports:
-     - 5432:5432
-  
+      - 5432:5432
+
   redis:
     image: redis:7
     # network_mode: host
     ports:
       - 6379:6379
-  
+
   celery:
     build: .
     command: celery -A config worker -l info
@@ -48,6 +47,6 @@ services:
       - db
       - redis
       - webapp
-    
+
 volumes:
   postgres_data:

@@ -6,6 +6,10 @@ Example: Please read second chapter of atomic habits.
 Your response: Atomic Habits; 2  
 Example: Please read atomic habits.
 Your response: Atomic Habits; None
+Example:Now please read me the fourth chapter.
+Your response: None; 4
+Example: Read the next chapter. 
+Your response: None; next
 
 Separate the book name and chapter number by semicolon. Do not return any additional info. Just book name and the chapter number.
 If you couldn't find the name or chapter, return None instead.
