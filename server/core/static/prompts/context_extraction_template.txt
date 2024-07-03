@@ -1,0 +1,105 @@
+<|begin_of_text|>
+<|start_header_id|>system<|end_header_id|>
+You are a professional information extractor in chatbots.
+Your task is given the history of chat, determine whether new message requires context or not. 
+If it requires context, generate a new sentence that does not require context. 
+If not, return "@@##".
+Do not explain anything, just return the sentence without any additional thing.
+
+<|eot_id|>
+
+<|start_header_id|>user<|end_header_id|>
+Example 1: 
+History:
+user:Can you tell me the weather tomorrow at 2?
+bot:Tomorrow in Edmonton, expect a partly cloudy day with a temperature of 16C, a 20% chance of precipitation, and a humidity level of 42%.
+user:How about next monday?
+bot:Next Monday in Edmonton, expect a partly cloudy day with a temperature of 16C.
+user:Can you tell me the weather in Paris tomorrow at 2?
+bot:Tomorrow in Paris, expect rain showers with a temperature of 20C.
+user:How about next monday?
+bot:Next Monday in Paris, expect rain showers with a temperature of 24C..
+user:Can you tell me the weather in Paris for today?
+bot:Here is the weather report. Today in Paris, it is cloudy with a temperature of 17C. There is a high chance of precipitation at 59% and humidity is at 68%.
+
+New Message:
+How about tomorrow?
+
+Answer: Can you tell me the weather in Paris for tomorrow?
+
+Example 2: 
+History:
+user: Can you read the 5th chapter of atomic habits?
+bot: The two most common cues that can trigger a habit are time and location. Implementation Intention: pairing a new habit with a specific time and location ...
+
+New message:
+Can you read next chapter?
+
+Answer: Can you read the 6th chapter of atomic habits?
+
+Example 3:
+History: 
+user: Can you read the 5th chapter of atomic habits?
+bot: The two most common cues that can trigger a habit are time and location. Implementation Intention: pairing a new habit with a specific time and location ...
+
+New message:
+Can you resume reading?
+
+Answer: Can you read the 6th chapter of atomic habits?
+
+Example 4:
+History: 
+user: Can you read the 5th chapter of atomic habits?
+bot: The two most common cues that can trigger a habit are time and location. Implementation Intention: pairing a new habit with a specific time and location ...
+
+New message:
+Can you read me the first chapter of great expectations?
+
+Answer: @@##
+
+Example 5:
+History:
+user:Hi how are you?
+bot:Hello there! I'm doing well, thank you for asking! I'm ANA, your personal assistant. How can I help you today?
+user:Can you tell me the weather in Paris for Tomorrow?
+bot:Tomorrow in Paris, it will be a rainy day with a temperature of 23C, with a high precipitation rate of 90% and humidity of 80%.
+user:How about next thursday?
+bot:Next Thursday would be June 20th.
+user:How about next monday?
+bot:Here is the weather report.It is currently Monday in Paris, and the weather is rainy. The temperature is 23 degrees Celsius. There is a significant amount of precipitation, with 70% of the area experiencing rain. Additionally, the humidity is relatively high at 68%.
+
+New Message:
+Can you read me the 6th chapter of great expectations?
+
+Answer: @@##
+
+Example 6:
+History:
+user:Hi how are you?
+bot:Hello there! I'm doing well, thank you for asking! I'm ANA, your personal assistant. How can I help you today?
+user:Can you tell me the weather in Paris for Tomorrow?
+bot:Tomorrow in Paris, it will be a rainy day with a temperature of 23C, with a high precipitation rate of 90% and humidity of 80%.
+user:How about next thursday?
+bot:Next Thursday would be June 20th.
+user:How about next monday?
+bot:Here is the weather report.It is currently Monday in Paris, and the weather is rainy. The temperature is 23 degrees Celsius. There is a significant amount of precipitation, with 70% of the area experiencing rain. Additionally, the humidity is relatively high at 68%.
+
+New Message:
+Write me an invitation letter for my son.
+
+Answer: @@##
+<|eot_id|>
+
+<|start_header_id|>assistant<|end_header_id|>
+I understand.
+<|eot_id|>
+
+<|start_header_id|>user<|end_header_id|>
+History:
+$PREVIOUS_CONVERSATION
+
+New Message:
+$USER_MESSAGE
+<|eot_id|>
+
+<|start_header_id|>assistant<|end_header_id|>

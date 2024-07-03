@@ -23,8 +23,6 @@ class ChatConsumer(WebsocketConsumer):
         # )
 
         user = self.scope['user']
-        new_message = Message.objects.create(owner=user, text=text_data_json["text"], source="user")
-        new_message.save()
         
         get_response(self.channel_name, text_data_json, user)
 

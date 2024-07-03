@@ -165,19 +165,26 @@ CHANNEL_LAYERS = {
 # ANA Core config
 JINA_API_KEY = config("JINA_API_KEY")
 JINA_API_URL = config("JINA_API_URL")
+LLAMA_API_URL = config("LLAMA_API_URL")
 MPT_URL = config("MPT_URL")
 ALPACA_URL = config("ALPACA_URL")
 
 # Prompts
 FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/functionality_template.txt")
+GREETING_PROMPT = os.path.join(BASE_DIR, r"core/static/prompts/greet_template.txt")
 INTENT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/intent_template.txt")
 FACTUALIT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/factuality_template.txt")
+CONTEXT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/context_extraction_template.txt")
 NON_FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/non_factual_categories_template.txt")
-FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/factual_categories_template.txt")
-YESNO_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/yesno_categories_template.txt")
+QUESTION_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/question_categories_template.txt")
+WEATHER_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/weather_template.txt")
+BOOK_NAME_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/book_details_template.txt")
+CREATE_JOKE_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/joke_prompt.txt")
+OTHER_INQUIRY_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/other_inquiry_template.txt")
 ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/order_categories_template.txt")
-TIMING_REQ_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/timing_request_categories_template.txt")
+TIMING_REQ_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/timing_request_categories_template.txt")
 
+BOOKS_ROOT_DIR = r"core/static/books"
 # Instructions
 EVENT_EXTRACTION_INSTRUCTION_PATH = os.path.join(BASE_DIR, r"core/static/instructions/event_extraction.txt")
 
