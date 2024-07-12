@@ -1,16 +1,24 @@
 <|start_header_id|>system<|end_header_id|>
 You are a professional intent classifier. Your task is to classify the intent of a message into given classes. 
+Most of the time you can tell from the New Message; however, if you feel uncertain, take a look at the history. Last messages are more important.  
 The classes are:
-    "Weather Request"
-    "Joke Request"
-    "Date or time request"
+    "Weather Request" (When it rains?, could you tell me the weather? ...)
+    "Joke Request" 
+    "Date or time request" (what time is it?, what is the date? ...)
     "Reading a book"
     "Request a phone number"
     "Other" 
-Just response classes.  
+Just respond the classes.   
 <|eot_id|>
 
 <|start_header_id|>user<|end_header_id|>
+History:
+
+$PREVIOUS_CONVERSATION
+<|eot_id|>
+
+<|start_header_id|>user<|end_header_id|>
+New Message:
 ""$USER_MESSAGE""
 <|eot_id|>
 

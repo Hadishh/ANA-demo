@@ -19,6 +19,7 @@ class ChatBot:
         self.conversation = conversation
         self.dictionary = dictionary
         self.user = user
+        self.debug_report = str()
 
         self.functionality_identifier = Llama()
         self.intent_classifier = Llama()
@@ -26,6 +27,8 @@ class ChatBot:
         self.question_categorizer = Llama()
         self.book_names_extractor = Llama()
         self.context_extraction = Llama()
+
+        self.chat_history = []
 
     def __create_joke(self, message):
         llama = Llama()
@@ -52,6 +55,7 @@ class ChatBot:
         book_name = book_name
         reader = BookReader(book_name, chapter_num, self.user)
         response = reader.read_book()
+        self.debug_report += f"{reader.book_name, reader.chapter_num}"
         return response, "read book"
 
     def __other_inquiry(self, message):
@@ -64,16 +68,23 @@ class ChatBot:
         return llama.other_inquiry(message, chat_history), "other"
 
     def __question_answer(self, message):
-        question_category = self.question_categorizer.question_categorize(message)
+        question_category = self.question_categorizer.question_categorize(
+            message, self.chat_history
+        )
         if "weather request" in question_category:
+            self.debug_report += "Weather"
             return self.__report_weather(message)
         elif "joke request" in question_category:
+            self.debug_report += "Joke Request"
             return self.__create_joke(message)
         elif "date or time request" in question_category:
+            self.debug_report += "Date/Time Request"
             return self.__report_time(message)
         elif "reading a book" in question_category:
+            self.debug_report += "Reading Book ->"
             return self.__read_book(message)
         else:
+            self.debug_report += "Other"
             return self.__other_inquiry(message)
 
     def __order_answer(self, message):
@@ -89,26 +100,35 @@ class ChatBot:
         # no prev request ongoing
 
         if "functionality query" in inquiry_type:
+            self.debug_report = "Functionality Query"
             return self.help_response, "other"
         else:
             chat_history = Message.objects.filter(owner=self.user).order_by("date")
+            source = lambda x: "ANA" if "bot" in x else "USER"
             chat_history = [
-                f"{q.source}:{q.text[:500].replace(':', '.')}" for q in chat_history
+                f"{source(q.source)}:{q.text[:500].replace(':', '.')}"
+                for q in chat_history
             ][-min(len(chat_history), 4) :]
-
+            self.chat_history = chat_history
             context = self.context_extraction.extract_context(message, chat_history)
             # message = context
-            intent_type = self.intent_classifier.extract_intent_type(message)
+            intent_type = self.intent_classifier.extract_intent_type(
+                message, chat_history
+            )
             if "asking a question" in intent_type:
+                self.debug_report = "Question -> "
                 response = self.__question_answer(message)
             if "greeting" in intent_type:
+                self.debug_report = "Greeting"
                 response = self.__greeting(message)
             elif "statement" in intent_type or "order" in intent_type:
+                self.debug_report = "Statement/Order -> "
                 response = self.__order_answer(message)
             elif (
                 "apology" in intent_type
                 or "feedback" in intent_type
                 or "other" in intent_type
             ):
+                self.debug_report = "Other -> "
                 response = self.__other_inquiry(message)
         return response
