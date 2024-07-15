@@ -22,7 +22,7 @@ const Login = () => {
             password
         };
         try {
-            const res = await axios.post('http://localhost:8000/users/login/', user);
+            const res = await axios.post(`${process.env.REACT_APP_HTTP_HOST}/users/login/`, user);
             // console.log(res.data);
             localStorage.setItem('access', res.data.access);
             localStorage.setItem('refresh', res.data.refresh);
@@ -30,7 +30,7 @@ const Login = () => {
         } catch (err) {
             console.error(err.response.data);
             setError(err.response.data.error); // Set error message as usual
-            
+
         }
     };
 

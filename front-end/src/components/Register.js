@@ -22,7 +22,7 @@ const Register = () => {
             password
         };
         try {
-            const res = await axios.post('http://localhost:8000/users/register/', newUser);
+            const res = await axios.post(`${process.env.REACT_APP_HTTP_HOST}/users/register/`, newUser);
             console.log(res.data);
             localStorage.setItem("access", res.data.access);
             localStorage.setItem("refresh", res.data.refresh);
@@ -30,7 +30,7 @@ const Register = () => {
         } catch (err) {
             console.error(err.response.data);
             setError(err.response.data.error); // Set error message as usual
-            
+
         }
     };
 
