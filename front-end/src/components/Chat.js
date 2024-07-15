@@ -13,6 +13,7 @@ const Chat = () => {
   const [showDebug, setShowDebug] = useState(false);
   const [debugText, setDebugText] = useState(''); // This will contain the debug string
   const [isBotTyping, setIsBotTyping] = useState(false);
+  const [selectedVersion, setSelectedVersion] = useState('v1');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const Chat = () => {
   const sendMessage = (message) => {
     setMessages((prevMessages) => [
       ...prevMessages,
-      { source: 'user', text: message }
+      { source: 'user', text: message, version: selectedVersion }
     ]);
     socketService.sendMessage(message);
     setIsBotTyping(true);
@@ -64,6 +65,10 @@ const Chat = () => {
     localStorage.removeItem("refresh");
     socketService.socket.close();
     navigate('/login'); // Redirect to login page after logout
+  };
+
+  const handleVersionChange = (event) => {
+    setSelectedVersion(event.target.value);
   };
 
   const toggleDebugBox = () => {
@@ -82,6 +87,10 @@ const Chat = () => {
             {showDebug ? 'Hide Debug' : 'Show Debug'}
           </button>
           <button onClick={handleLogout} className="logout-button">Logout</button>
+          <select value={selectedVersion} onChange={handleVersionChange} className="version-select">
+            <option value="v1">Version 1</option>
+            <option value="v2">Version 2</option>
+          </select>
         </div>
       </header>
 
