@@ -67,7 +67,13 @@
   width: 100%;
 }
 
-html, body {
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -126,4 +132,12 @@ input {
 
 .logout-button:hover {
   background-color: #ff5252;
+}
+
+.toggle-debug-button {
+  background-color: #ff6600;
+  border: none;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
 }
