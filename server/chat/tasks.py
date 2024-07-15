@@ -30,8 +30,7 @@ def get_response(channel_name, input_data, user):
         channel_name,
         {
             "type": "chat.message",
-            "text": {"msg": answer, "source": "bot"},
-            "debug": chatbot.debug_report,
+            "text": {"msg": answer, "source": "bot", "debug": chatbot.debug_report},
         },
     )
     new_message = Message.objects.create(

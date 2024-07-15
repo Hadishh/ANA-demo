@@ -10,6 +10,13 @@ const ChatInput = ({ sendMessage, isBotTyping }) => {
     setMessage(event.target.value);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();  // Prevents default behavior of Enter key
+      handleSubmit(event);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (message.trim()) {
@@ -24,6 +31,7 @@ const ChatInput = ({ sendMessage, isBotTyping }) => {
         className="chat-input"
         value={message}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         rows="3"
         placeholder="Type a message..."
       />
