@@ -3,11 +3,10 @@ import pytz
 from datetime import datetime
 
 from core.llama.llama import Llama
-from core.alpaca_lora.alpaca_lora import AlpacaLora
 from core.weather.weather import Weather
 from core.library.book_reading import BookReader
 from core.utils import get_location_and_time, detect_day1
-from config.settings.base import HELP_RESPONSE_PATH, BOOKS_ROOT_DIR
+from config.settings.base import HELP_RESPONSE_PATH
 from chat.models import Message
 
 
@@ -94,6 +93,18 @@ class ChatBot:
         return self.greet.greet(message), "other"
 
     def answer(self, message):
+        version = message["version"]
+        message = message["text"]
+        chat_history = Message.objects.filter(owner=self.user).order_by("date")
+        source = lambda x: "ANA" if "bot" in x else "USER"
+        chat_history = [
+            f"{source(q.source)}:{q.text[:500].replace(':', '.')}" for q in chat_history
+        ][-min(len(chat_history), 6) :]
+        if version == "v2":
+            chatbotv2 = ChatbotV2(chat_history, self.user)
+            response = chatbotv2.answer(message)
+            self.debug_report = chatbotv2.debug
+            return response
         inquiry_type = self.functionality_identifier.exctract_functionality(message)
 
         print(inquiry_type)
@@ -103,15 +114,6 @@ class ChatBot:
             self.debug_report = "Functionality Query"
             return self.help_response, "other"
         else:
-            chat_history = Message.objects.filter(owner=self.user).order_by("date")
-            source = lambda x: "ANA" if "bot" in x else "USER"
-            chat_history = [
-                f"{source(q.source)}:{q.text[:500].replace(':', '.')}"
-                for q in chat_history
-            ][-min(len(chat_history), 4) :]
-            self.chat_history = chat_history
-            context = self.context_extraction.extract_context(message, chat_history)
-            # message = context
             intent_type = self.intent_classifier.extract_intent_type(
                 message, chat_history
             )
@@ -132,3 +134,101 @@ class ChatBot:
                 self.debug_report = "Other -> "
                 response = self.__other_inquiry(message)
         return response
+
+
+from core.date_time.time_by_city import get_city_time
+
+
+class ChatbotV2:
+    def __init__(self, chat_history, user) -> None:
+        self.chat_history = chat_history
+        self.user = user
+        self.debug = str()
+
+    def __exctract_args(self, function_call: str, function_name: str):
+
+        function_call = (
+            function_call.replace(function_name, "").replace('"', "").strip()
+        )
+        if function_call[0] == "(":
+            function_call = function_call[1:]
+        if function_call[-1] == ")":
+            function_call = function_call[:-1]
+
+        args = function_call.split(",")
+        args = [arg.strip() for arg in args]
+
+        return args
+
+    def get_time(self, function_call: str):
+        args = self.__exctract_args(function_call, "current_time")
+        city_name = args[0]
+        return get_city_time(city_name)
+
+    def get_weather(self, function_call: str):
+        weather = Weather()
+        args = self.__exctract_args(function_call, "weather")
+        print(args)
+        if len(args) != 2:
+            args = " ".join(args)
+            return weather.get_weather(args)
+        city, day = tuple(args)
+        return weather.get_weather_by_city(city, day)
+
+    def get_book_details(self, function_call):
+        args = self.__exctract_args(function_call=function_call, function_name="book")
+        if len(args) == 2:
+            book_name, chapter_num = tuple(args)
+            chapter_num = (
+                int(chapter_num.strip()) if chapter_num.strip().isdecimal() else -1
+            )
+        else:
+            book_name, chapter_num = "none", -1
+        reader = BookReader(book_name, chapter_num, self.user)
+        return reader.read_book()
+
+    def get_date(self, function_call):
+        args = self.__exctract_args(function_call, function_name="date")
+
+        if len(args) == 1:
+            day = args[0]
+            return Llama().report_datetime(f"What is the date of {day}?")
+        else:
+            return Llama().report_datetime(f"What is the date of today?")
+
+    def answer(self, message):
+        llama = Llama()
+        answer = llama.ask_if_answer(
+            message, self.chat_history[-min(len(self.chat_history), 4) :]
+        )
+        if "no" in answer:
+            function_call = llama.get_function_call(
+                message, self.chat_history[-min(len(self.chat_history), 4) :]
+            )
+            self.debug = (
+                f"The bot cannot ansewr, doing a function call {function_call}:\n"
+            )
+            if "none" in function_call:
+                self.debug += (
+                    "Resuming the conversation, none of the function calls can help."
+                )
+                return llama.other_inquiry(message, self.chat_history), "other"
+            elif "current_time" in function_call:
+                return self.get_time(function_call), "other"
+            elif "weather" in function_call:
+                weather_info = self.get_weather(function_call)
+                return llama.report_weather(weather_info), "weather"
+            elif "book" in function_call:
+                return self.get_book_details(function_call), "read book"
+            elif "date" in function_call:
+                return self.get_date(function_call), "other"
+            else:
+                self.debug += (
+                    "The function call is cringe, resuming the conv with llama."
+                )
+                return llama.other_inquiry(message, self.chat_history), "other"
+
+        elif "yes" in answer:
+            self.debug = f"The bot can ansewr, resuming the conversation.\n"
+            return llama.other_inquiry(message, self.chat_history), "other"
+        return answer, "other"
