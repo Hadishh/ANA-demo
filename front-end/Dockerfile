@@ -22,8 +22,5 @@ RUN npm install -g serve
 # Set the environment variables
 ENV NODE_ENV=production
 
-# Expose the port the app runs on
-EXPOSE 5000
-
 # Start the application
 CMD ["serve", "-s", "build"]

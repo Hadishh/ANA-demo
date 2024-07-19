@@ -6,27 +6,35 @@ import pytz
 from geotext import GeoText
 import re
 
+
 def detect_day(sentence):
     nlp = spacy.load("en_core_web_sm")
     doc = nlp(sentence)
 
-    days_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-    time_indicators = ['morning', 'afternoon', 'evening', 'night','tonight','today']
+    days_of_week = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+    ]
+    time_indicators = ["morning", "afternoon", "evening", "night", "tonight", "today"]
     for token in doc:
-        if token.text.lower() == 'tomorrow':
+        if token.text.lower() == "tomorrow":
             next_token = token.nbor()
-            
 
-        if token.text.lower() == 'next':
+        if token.text.lower() == "next":
             next_token = token.nbor()
-            if next_token.text.lower() == 'day':
-                return 'Next day'		
+            if next_token.text.lower() == "day":
+                return "Next day"
             elif next_token.text.lower() in time_indicators:
-                return f'Next {next_token.text.lower()}'
-        if token.text.lower() == 'next':
+                return f"Next {next_token.text.lower()}"
+        if token.text.lower() == "next":
             next_token = token.nbor()
-            if next_token.text.lower() == 'week':
-                return 'Next week'		
+            if next_token.text.lower() == "week":
+                return "Next week"
         if token.text.lower() in days_of_week:
             return token.text.capitalize()
 
@@ -34,10 +42,10 @@ def detect_day(sentence):
         if token.text.lower() in days_of_week:
             return token.text.capitalize()  # Return the detected day of the week
 
-        if token.text.lower() in ['today', 'tomorrow']:
+        if token.text.lower() in ["today", "tomorrow"]:
             return token.text.capitalize()  # Return relative day reference
 
-        if token.text.lower() == 'next' and token.head.text.lower() in days_of_week:
+        if token.text.lower() == "next" and token.head.text.lower() in days_of_week:
             next_day = token.head.text.capitalize()
             return f"Next {next_day}"  # Return "Next <day of the week>"
 
@@ -48,7 +56,7 @@ def detect_time(sentence):
     nlp = spacy.load("en_core_web_sm")
     doc = nlp(sentence)
 
-    time_indicators = ['morning', 'afternoon', 'evening', 'night','tonight','now']
+    time_indicators = ["morning", "afternoon", "evening", "night", "tonight", "now"]
 
     for token in doc:
         if token.text.lower() in time_indicators:
@@ -65,24 +73,30 @@ def detect_time(sentence):
 
     return None
 
+
 def get_current_location():
     url = "http://ip-api.com/json"  # IP Geolocation API endpoint
     response = requests.get(url)
     data = response.json()
-    
+
     if data["status"] == "success":
         return data["city"]
     else:
         return None
+
 
 def detect_locations_spacy(text):
     nlp = spacy.load("en_core_web_sm")
     doc = nlp(text)
     locations = []
     for ent in doc.ents:
-        if ent.label_ in ["GPE", "LOC"]:  # GPE represents geopolitical entities, LOC represents cities
+        if ent.label_ in [
+            "GPE",
+            "LOC",
+        ]:  # GPE represents geopolitical entities, LOC represents cities
             locations.append(ent.text)
     return locations
+
 
 def detect_locations_geotext(text):
     places = GeoText(text)
@@ -92,11 +106,11 @@ def detect_locations_geotext(text):
 
 def get_location_and_time():
     # Get location data
-    location_data = requests.get('http://ip-api.com/json').json()
-    
+    location_data = requests.get("http://ip-api.com/json").json()
+
     # Get timezone and city
-    timezone = location_data['timezone']
-    city = location_data['city']
+    timezone = location_data["timezone"]
+    city = location_data["city"]
 
     # Get current time in the timezone
     local_time = datetime.datetime.now(pytz.timezone(timezone))
@@ -104,7 +118,8 @@ def get_location_and_time():
     # Format the time
     formatted_time = local_time.strftime("%I:%M %p").lstrip("0")
 
-    return f"The current time in '{city}' is {formatted_time}"  
+    return f"The current time in '{city}' is {formatted_time}"
+
 
 def get_date(day):
     # Map string inputs to number of days from today
@@ -114,7 +129,7 @@ def get_date(day):
         "next day": 2,
         # Add more as needed...
     }
-    
+
     if day in day_mapping:
         n = day_mapping[day]
     else:
@@ -147,6 +162,7 @@ SPECIAL_CASES = {
     "next day": 2,
 }
 
+
 def get_date_from_sentence(sentence):
     # Lowercase the sentence to ensure we catch all instances
     sentence = sentence.lower()
@@ -154,7 +170,9 @@ def get_date_from_sentence(sentence):
     # Check for special cases
     for case in SPECIAL_CASES:
         if case in sentence:
-            target_date = datetime.datetime.now() + datetime.timedelta(days=SPECIAL_CASES[case])
+            target_date = datetime.datetime.now() + datetime.timedelta(
+                days=SPECIAL_CASES[case]
+            )
             return target_date.strftime(f"The date for {case} is %d/%m/%Y.")
 
     # Parse the day of the week from the sentence
@@ -181,6 +199,7 @@ def get_date_from_sentence(sentence):
     formatted_date = next_day.strftime("%d/%m/%Y")
 
     return f"The next {day_name.capitalize()} will be on {formatted_date}."
+
 
 def detect_day1(sentence):
     # Lowercase the sentence to ensure we catch all instances

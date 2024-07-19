@@ -4,15 +4,12 @@ from datetime import datetime
 import pytz
 
 from config.settings.base import (
-    JINA_API_KEY,
     LLAMA_API_URL,
     FUNCTIONALITY_CLF_PROMPT_PATH,
     GREETING_PROMPT,
     WEATHER_PROMPT_PATH,
     INTENT_PROMPT_PATH,
-    ORDER_CATEGORIZATION_PROMPT_PATH,
     BOOK_NAME_PROMPT_PATH,
-    FACTUALIT_PROMPT_PATH,
     OTHER_INQUIRY_PROMPT_PATH,
     CONTEXT_PROMPT_PATH,
     QUESTION_CATEGORIZATION_PROMPT_PATH,
@@ -173,3 +170,20 @@ class Llama:
         response = self.__extract_assistant_content(response["response"])
 
         return response
+
+    def ask_if_answer(self, message, chat_history):
+        config = {"max_new_tokens": 32}
+        response = self.__perform_action_with_history(
+            "core/static/prompts/v2/ana_v2_ask.txt", message, chat_history, config
+        )
+
+        return response.lower()
+
+    def get_function_call(self, message, chat_history):
+        config = {"max_new_tokens": 32}
+
+        response = self.__perform_action_with_history(
+            "core/static/prompts/v2/ana_v2_functions.txt", message, chat_history, config
+        )
+
+        return response.lower()

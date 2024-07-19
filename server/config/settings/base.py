@@ -36,14 +36,14 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 INSTALLED_APPS = [
     "daphne",
     "users",
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework_simplejwt',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework_simplejwt",
     "corsheaders",
     # Local apps
     "chat",
@@ -51,38 +51,38 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-ROOT_URLCONF = 'config.urls'
-AUTH_USER_MODEL = 'users.User'
+ROOT_URLCONF = "config.urls"
+AUTH_USER_MODEL = "users.User"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
 # Database
@@ -100,8 +100,8 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
 
@@ -110,16 +110,16 @@ REST_FRAMEWORK = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -127,9 +127,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -139,12 +139,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
@@ -170,23 +170,46 @@ MPT_URL = config("MPT_URL")
 ALPACA_URL = config("ALPACA_URL")
 
 # Prompts
-FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/functionality_template.txt")
-GREETING_PROMPT = os.path.join(BASE_DIR, r"core/static/prompts/greet_template.txt")
-INTENT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/intent_template.txt")
-FACTUALIT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/factuality_template.txt")
-CONTEXT_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/context_extraction_template.txt")
-NON_FACTUAL_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/non_factual_categories_template.txt")
-QUESTION_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/question_categories_template.txt")
-WEATHER_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/weather_template.txt")
-BOOK_NAME_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/book_details_template.txt")
-CREATE_JOKE_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/joke_prompt.txt")
-OTHER_INQUIRY_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/other_inquiry_template.txt")
-ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/order_categories_template.txt")
-TIMING_REQ_PROMPT_PATH = os.path.join(BASE_DIR, r"core/static/prompts/timing_request_categories_template.txt")
+FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/functionality_template.txt"
+)
+GREETING_PROMPT = os.path.join(BASE_DIR, r"core/static/prompts/v1/greet_template.txt")
+INTENT_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/intent_template.txt"
+)
+FACTUALIT_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/factuality_template.txt"
+)
+CONTEXT_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/context_extraction_template.txt"
+)
+QUESTION_CATEGORIZATION_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/question_categories_template.txt"
+)
+WEATHER_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/weather_template.txt"
+)
+BOOK_NAME_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/book_details_template.txt"
+)
+CREATE_JOKE_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/joke_prompt.txt"
+)
+OTHER_INQUIRY_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/other_inquiry_template.txt"
+)
+ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/order_categories_template.txt"
+)
+TIMING_REQ_PROMPT_PATH = os.path.join(
+    BASE_DIR, r"core/static/prompts/v1/timing_request_categories_template.txt"
+)
 
 BOOKS_ROOT_DIR = r"core/static/books"
 # Instructions
-EVENT_EXTRACTION_INSTRUCTION_PATH = os.path.join(BASE_DIR, r"core/static/instructions/event_extraction.txt")
+EVENT_EXTRACTION_INSTRUCTION_PATH = os.path.join(
+    BASE_DIR, r"core/static/instructions/event_extraction.txt"
+)
 
 # Responses
 HELP_RESPONSE_PATH = os.path.join(BASE_DIR, r"core/static/responses/help_response.txt")
