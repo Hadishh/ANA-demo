@@ -55,7 +55,7 @@ const Chat = () => {
       ...prevMessages,
       { source: 'user', text: message, version: selectedVersion }
     ]);
-    socketService.sendMessage(message);
+    socketService.sendMessage({ source: 'user', text: message, version: selectedVersion });
     setIsBotTyping(true);
   };
 
