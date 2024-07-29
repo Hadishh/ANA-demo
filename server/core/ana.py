@@ -137,6 +137,7 @@ class ChatBot:
 
 
 from core.date_time.time_by_city import get_city_time
+import random
 
 
 class ChatbotV2:
@@ -150,6 +151,8 @@ class ChatbotV2:
         function_call = (
             function_call.replace(function_name, "").replace('"', "").strip()
         )
+        if len(function_call) < 2:
+            return [""]  # Just the function name, made bugs TODO
         if function_call[0] == "(":
             function_call = function_call[1:]
         if function_call[-1] == ")":
@@ -208,25 +211,35 @@ class ChatbotV2:
             self.debug = (
                 f"The bot cannot ansewr, doing a function call {function_call}:\n"
             )
+
+            external_info = str()
+
             if "none" in function_call:
                 self.debug += (
                     "Resuming the conversation, none of the function calls can help."
                 )
                 return llama.other_inquiry(message, self.chat_history), "other"
             elif "current_time" in function_call:
-                return self.get_time(function_call), "other"
+                external_info = self.get_time(function_call)
             elif "weather" in function_call:
-                weather_info = self.get_weather(function_call)
-                return llama.report_weather(weather_info), "weather"
+                external_info = self.get_weather(function_call)
             elif "book" in function_call:
                 return self.get_book_details(function_call), "read book"
             elif "date" in function_call:
-                return self.get_date(function_call), "other"
-            else:
-                self.debug += (
-                    "The function call is cringe, resuming the conv with llama."
+                external_info = self.get_date(function_call)
+
+            self.debug += f"\n Got the external info: \n\n{external_info}\n\n Possible responses:\n\n"
+            RESPONSES = 3
+            responses = []
+
+            for _ in range(RESPONSES):
+                new_resp = llama.answer_with_external_info(
+                    message, self.chat_history, external_info
                 )
-                return llama.other_inquiry(message, self.chat_history), "other"
+                responses.append(new_resp)
+            self.debug += "[" + "|||||".join(responses) + "\n]"
+
+            return random.choice(responses), "other"
 
         elif "yes" in answer:
             self.debug = f"The bot can ansewr, resuming the conversation.\n"

@@ -171,6 +171,23 @@ class Llama:
 
         return response
 
+    def answer_with_external_info(self, message, chat_history, external_info):
+        EXTERNAL_INFO_KEY = "$EXTERNAL_KNOWLEDGE"
+        config = {"max_new_tokens": 2048}
+
+        chat_history = [h.replace("\n", "") for h in chat_history]
+        chat_history = "\n".join(chat_history)
+
+        template = self.__load_template("core/static/prompts/v2/ana_v2_answer.txt")
+        prompt = template.replace(self.previous_conv_key, chat_history)
+        prompt = prompt.replace(EXTERNAL_INFO_KEY, external_info)
+        prompt = prompt.replace(self.prompt_user_key, message)
+
+        response = self.__request(prompt, config)
+        response = self.__extract_assistant_content(response["response"])
+
+        return response
+
     def ask_if_answer(self, message, chat_history):
         config = {"max_new_tokens": 32}
         response = self.__perform_action_with_history(
