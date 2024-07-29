@@ -27,6 +27,8 @@
     width: 80%;
     max-width: 600px;
     position: relative;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .debug-message {
