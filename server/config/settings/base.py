@@ -163,11 +163,8 @@ CHANNEL_LAYERS = {
 
 
 # ANA Core config
-JINA_API_KEY = config("JINA_API_KEY")
-JINA_API_URL = config("JINA_API_URL")
 LLAMA_API_URL = config("LLAMA_API_URL")
-MPT_URL = config("MPT_URL")
-ALPACA_URL = config("ALPACA_URL")
+
 
 # Prompts
 FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(
@@ -176,9 +173,6 @@ FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(
 GREETING_PROMPT = os.path.join(BASE_DIR, r"core/static/prompts/v1/greet_template.txt")
 INTENT_PROMPT_PATH = os.path.join(
     BASE_DIR, r"core/static/prompts/v1/intent_template.txt"
-)
-FACTUALIT_PROMPT_PATH = os.path.join(
-    BASE_DIR, r"core/static/prompts/v1/factuality_template.txt"
 )
 CONTEXT_PROMPT_PATH = os.path.join(
     BASE_DIR, r"core/static/prompts/v1/context_extraction_template.txt"
@@ -198,9 +192,6 @@ CREATE_JOKE_PROMPT_PATH = os.path.join(
 OTHER_INQUIRY_PROMPT_PATH = os.path.join(
     BASE_DIR, r"core/static/prompts/v1/other_inquiry_template.txt"
 )
-ORDER_CATEGORIZATION_PROMPT_PATH = os.path.join(
-    BASE_DIR, r"core/static/prompts/v1/order_categories_template.txt"
-)
 TIMING_REQ_PROMPT_PATH = os.path.join(
     BASE_DIR, r"core/static/prompts/v1/timing_request_categories_template.txt"
 )
@@ -214,6 +205,25 @@ EVENT_EXTRACTION_INSTRUCTION_PATH = os.path.join(
 # Responses
 HELP_RESPONSE_PATH = os.path.join(BASE_DIR, r"core/static/responses/help_response.txt")
 
-
 CALENDAR_CREDS_PATH = os.path.join(BASE_DIR, r"core/static/credentials.json")
 TEMP_TOKEN_PATH = os.path.join(BASE_DIR, r"core/static/token.pkl")
+
+# Union of prompts
+V1_PROMPTS = [
+    FUNCTIONALITY_CLF_PROMPT_PATH,
+    GREETING_PROMPT,
+    INTENT_PROMPT_PATH,
+    CONTEXT_PROMPT_PATH,
+    QUESTION_CATEGORIZATION_PROMPT_PATH,
+    WEATHER_PROMPT_PATH,
+    BOOK_NAME_PROMPT_PATH,
+    CREATE_JOKE_PROMPT_PATH,
+    OTHER_INQUIRY_PROMPT_PATH,
+    TIMING_REQ_PROMPT_PATH,
+]
+
+V2_PROMPTS = [
+    "core/static/prompts/v2/ana_v2_answer.txt",
+    "core/static/prompts/v2/ana_v2_ask.txt",
+    "core/static/prompts/v2/ana_v2_functions.txt",
+]
