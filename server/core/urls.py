@@ -3,8 +3,6 @@ from .views import PromptViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r"files", PromptViewSet, basename="file")
+router.register(r"prompts", PromptViewSet, basename="prompt")
 
-urlpatterns = [
-    path("prompts/", include(router.urls)),
-]
+urlpatterns = router.urls
