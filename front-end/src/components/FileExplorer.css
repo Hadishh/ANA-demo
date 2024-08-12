@@ -1,0 +1,87 @@
+.file-explorer-container {
+    display: flex;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.file-list {
+    width: 20%;
+    /* Further reduced the width to give more space to the editor */
+    margin-right: 20px;
+    border-right: 2px solid #ddd;
+    padding-right: 20px;
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.file-list h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.file-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.file-list li {
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.file-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.file-list .selected {
+    background-color: #e0e0e0;
+    border-color: #bbb;
+    font-weight: bold;
+}
+
+.file-editor {
+    flex-grow: 1;
+    padding-left: 20px;
+    width: 80%;
+    /* Ensure the editor takes up the remaining width */
+}
+
+.file-editor .editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.file-editor .editor-header h2 {
+    font-size: 20px;
+}
+
+.file-editor textarea {
+    width: 1000px;
+    height: 50vh;
+    font-family: monospace;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.loading-spinner {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}

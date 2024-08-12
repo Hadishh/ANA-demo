@@ -71,6 +71,10 @@ const Chat = () => {
     setSelectedVersion(event.target.value);
   };
 
+  const handleEdit = () => {
+    navigate("/editor")
+  };
+
   const toggleDebugBox = () => {
     setShowDebug(!showDebug);
   };
@@ -83,6 +87,7 @@ const Chat = () => {
           <h1>🤖 ANA-Assistant 🤖</h1>
         </div>
         <div className="header-buttons">
+          <button onClick={handleEdit} className="logout-button">Prompt Editor</button>
           <button onClick={toggleDebugBox} className="toggle-debug-button">
             {showDebug ? 'Hide Debug' : 'Show Debug'}
           </button>
