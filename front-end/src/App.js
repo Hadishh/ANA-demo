@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from './components/Login';
 import Register from './components/Register';
 import Chat from './components/Chat';
+import FileExplorer from './components/FileExplorer';
 
 const App = () => {
     return (
@@ -13,6 +14,7 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/chat" element={<Chat />} />
+                    <Route path="/editor" element={<FileExplorer />} />
                 </Routes>
             </div>
         </Router>

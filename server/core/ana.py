@@ -20,32 +20,32 @@ class ChatBot:
         self.user = user
         self.debug_report = str()
 
-        self.functionality_identifier = Llama()
-        self.intent_classifier = Llama()
-        self.greet = Llama()
-        self.question_categorizer = Llama()
-        self.book_names_extractor = Llama()
-        self.context_extraction = Llama()
+        self.functionality_identifier = Llama(self.user)
+        self.intent_classifier = Llama(self.user)
+        self.greet = Llama(self.user)
+        self.question_categorizer = Llama(self.user)
+        self.book_names_extractor = Llama(self.user)
+        self.context_extraction = Llama(self.user)
 
         self.chat_history = []
 
     def __create_joke(self, message):
-        llama = Llama()
+        llama = Llama(self.user)
         prev_jokes = Message.objects.filter(owner=self.user, source="bot", type="joke")
         prev_jokes = [p.text for p in prev_jokes][-min(len(prev_jokes), 5) :]
         return llama.create_joke(message, previous_jokes=prev_jokes), "joke"
 
     def __report_weather(self, message):
         weather_info = Weather().get_weather(message)
-        llama = Llama()
+        llama = Llama(self.user)
         return llama.report_weather(weather_info), "weather"
 
     def __report_time(self, message):
-        llama = Llama()
+        llama = Llama(self.user)
         return llama.report_datetime(message), "other"
 
     def __read_book(self, message):
-        llama = Llama()
+        llama = Llama(self.user)
         details = llama.extract_book_name(message)
         book_name, chapter_num = tuple(details.split(";"))
         chapter_num = (
@@ -58,7 +58,7 @@ class ChatBot:
         return response, "read book"
 
     def __other_inquiry(self, message):
-        llama = Llama()
+        llama = Llama(self.user)
         chat_history = Message.objects.filter(owner=self.user).order_by("date")
         chat_history = [
             f"{q.source}:{q.text[:500].replace(':', '.')}" for q in chat_history
@@ -195,12 +195,12 @@ class ChatbotV2:
 
         if len(args) == 1:
             day = args[0]
-            return Llama().report_datetime(f"What is the date of {day}?")
+            return Llama(self.user).report_datetime(f"What is the date of {day}?")
         else:
-            return Llama().report_datetime(f"What is the date of today?")
+            return Llama(self.user).report_datetime(f"What is the date of today?")
 
     def answer(self, message):
-        llama = Llama()
+        llama = Llama(self.user)
         answer = llama.ask_if_answer(
             message, self.chat_history[-min(len(self.chat_history), 4) :]
         )
