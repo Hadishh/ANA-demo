@@ -8,7 +8,7 @@ The classes are:
     "Reading a book"
     "Request a phone number"
     "Other" 
-Just respond the classes.   
+Just respond to the classes.   
 <|eot_id|>
 
 <|start_header_id|>user<|end_header_id|>
