@@ -33,6 +33,8 @@
 
 .debug-message {
     margin-top: 20px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .close-button {

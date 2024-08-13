@@ -216,7 +216,7 @@ class ChatbotV2:
 
             if "none" in function_call:
                 self.debug += (
-                    "Resuming the conversation, none of the function calls can help."
+                    "Resuming the conversation, none of the function calls can help. \n"
                 )
                 return llama.other_inquiry(message, self.chat_history), "other"
             elif "current_time" in function_call:
@@ -232,12 +232,12 @@ class ChatbotV2:
             RESPONSES = 3
             responses = []
 
-            for _ in range(RESPONSES):
+            for i in range(RESPONSES):
                 new_resp = llama.answer_with_external_info(
                     message, self.chat_history, external_info
                 )
                 responses.append(new_resp)
-            self.debug += "[" + "|||||".join(responses) + "\n]"
+                self.debug += f"Response {i}: \n {new_resp}\n\n"
 
             return random.choice(responses), "other"
 
