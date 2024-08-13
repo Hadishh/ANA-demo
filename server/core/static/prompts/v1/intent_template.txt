@@ -10,7 +10,7 @@ The classes are:
     "Apology"
     "Statement"
     "Order" 
-Remember if any message is not in the classes above, answer with "Others." Just respond classes.  
+Remember if any message is not in the classes above, answer with "Others." Just respond to classes.  
 <|eot_id|>
 
 <|start_header_id|>user<|end_header_id|>

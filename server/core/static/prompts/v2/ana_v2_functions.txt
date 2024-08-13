@@ -12,7 +12,7 @@ Default value for city: Edmonton
 Default value for day: today
 Default value for Book_name: great expectations
 Default value for Chapter_num: 1
-Return the fucntion with args only. Use default value if an arg is not specified in the user message. If none will help return "none". Do not reaturn anything other than the functions above. All the required args should be present in the call. 
+Return the function with args only. Use default value if an arg is not specified in the user message. If none will help return "none". Do not return anything other than the functions above. All the required args should be present in the call. 
 <|eot_id|>
 
 <|start_header_id|>user<|end_header_id|>
