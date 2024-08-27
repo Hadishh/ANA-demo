@@ -151,6 +151,7 @@ class ChatbotV2:
             "what else can you do?",
             "what can you do for me?",
         ]
+        self.yes_or_no = ["yes", "yeah", "no", "nah"]
         with open(HELP_RESPONSE_PATH, "r") as f:
             self.help_response = f.read()
 
@@ -218,6 +219,7 @@ class ChatbotV2:
         answer = llama.ask_if_answer(
             message, self.chat_history[-min(len(self.chat_history), 4) :]
         )
+
         if "no" in answer:
             function_call = llama.get_function_call(
                 message, self.chat_history[-min(len(self.chat_history), 4) :]
@@ -228,7 +230,7 @@ class ChatbotV2:
 
             external_info = str()
             try:
-                if "none" in function_call:
+                if "none" in function_call or "recipe" in function_call:
                     self.debug += "Resuming the conversation, none of the function calls can help. \n"
                     return llama.other_inquiry(message, self.chat_history), "other"
                 elif "current_time" in function_call:
