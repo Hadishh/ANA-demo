@@ -13,7 +13,7 @@ const Chat = () => {
   const [showDebug, setShowDebug] = useState(false);
   const [debugText, setDebugText] = useState(''); // This will contain the debug string
   const [isBotTyping, setIsBotTyping] = useState(false);
-  const [selectedVersion, setSelectedVersion] = useState('v1');
+  const [selectedVersion, setSelectedVersion] = useState('v2');
   const navigate = useNavigate();
 
   useEffect(() => {
