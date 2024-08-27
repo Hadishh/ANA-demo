@@ -145,6 +145,14 @@ class ChatbotV2:
         self.chat_history = chat_history
         self.user = user
         self.debug = str()
+        self.help_cmds = [
+            "what can you do?",
+            "how can you help me?",
+            "what else can you do?",
+            "what can you do for me?",
+        ]
+        with open(HELP_RESPONSE_PATH, "r") as f:
+            self.help_response = f.read()
 
     def __exctract_args(self, function_call: str, function_name: str):
 
@@ -166,6 +174,8 @@ class ChatbotV2:
     def get_time(self, function_call: str):
         args = self.__exctract_args(function_call, "current_time")
         city_name = args[0]
+        if city_name == "":
+            city_name = "Edmonton"
         return get_city_time(city_name)
 
     def get_weather(self, function_call: str):
@@ -180,12 +190,12 @@ class ChatbotV2:
 
     def get_book_details(self, function_call):
         args = self.__exctract_args(function_call=function_call, function_name="book")
-        if len(args) == 2:
+        try:
             book_name, chapter_num = tuple(args)
             chapter_num = (
                 int(chapter_num.strip()) if chapter_num.strip().isdecimal() else -1
             )
-        else:
+        except:
             book_name, chapter_num = "none", -1
         reader = BookReader(book_name, chapter_num, self.user)
         return reader.read_book()
@@ -200,6 +210,10 @@ class ChatbotV2:
             return Llama(self.user).report_datetime(f"What is the date of today?")
 
     def answer(self, message):
+        for help_ in self.help_cmds:
+            if help_ in message.lower():
+                return self.help_response, "other"
+
         llama = Llama(self.user)
         answer = llama.ask_if_answer(
             message, self.chat_history[-min(len(self.chat_history), 4) :]
@@ -213,23 +227,24 @@ class ChatbotV2:
             )
 
             external_info = str()
-
-            if "none" in function_call:
-                self.debug += (
-                    "Resuming the conversation, none of the function calls can help. \n"
-                )
+            try:
+                if "none" in function_call:
+                    self.debug += "Resuming the conversation, none of the function calls can help. \n"
+                    return llama.other_inquiry(message, self.chat_history), "other"
+                elif "current_time" in function_call:
+                    external_info = self.get_time(function_call)
+                elif "weather" in function_call:
+                    external_info = self.get_weather(function_call)
+                elif "book" in function_call:
+                    return self.get_book_details(function_call), "read book"
+                elif "date" in function_call:
+                    external_info = self.get_date(function_call)
+            except Exception as e:
+                self.debug += f"Exception occured: {str(e)}"
+                print(f"Exception: {str(e)}")
                 return llama.other_inquiry(message, self.chat_history), "other"
-            elif "current_time" in function_call:
-                external_info = self.get_time(function_call)
-            elif "weather" in function_call:
-                external_info = self.get_weather(function_call)
-            elif "book" in function_call:
-                return self.get_book_details(function_call), "read book"
-            elif "date" in function_call:
-                external_info = self.get_date(function_call)
-
             self.debug += f"\n Got the external info: \n\n{external_info}\n\n Possible responses:\n\n"
-            RESPONSES = 3
+            RESPONSES = 1
             responses = []
 
             for i in range(RESPONSES):

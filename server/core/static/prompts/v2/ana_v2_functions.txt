@@ -5,14 +5,14 @@ You are an agent, based on the context decide which function can help you answer
 1. Weather(City, Day): Provides the weather forecast for a specific city on a given day. Example: Weather(New York, tomorrow), Weather(London, today)
 2. Date(Day): Returns the current date or the date for a specified day. Example: Date(next monday)
 3. Current_Time(City): Returns the current time in a specific city.
-4. Book(Book_name, Chapter_num): Provides a summary or details from a specified book and chapter.
+4. Book(Book_name, Chapter_num): Provides a chapter of a novel or a story. These books are NOT related to recipes.
 6. None
 
 Default value for city: Edmonton
 Default value for day: today
 Default value for Book_name: great expectations
 Default value for Chapter_num: 1
-Return the function with args only. Use default value if an arg is not specified in the user message. If none will help return "none". Do not return anything other than the functions above. All the required args should be present in the call. 
+Return the function with args only. Use default value if an arg is not specified in the user message. If none will help return "None". Do not return anything other than the functions above or "None". All the required args should be present in the call. 
 <|eot_id|>
 
 <|start_header_id|>user<|end_header_id|>
