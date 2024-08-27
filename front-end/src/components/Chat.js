@@ -59,6 +59,24 @@ const Chat = () => {
     setIsBotTyping(true);
   };
 
+  const handleDeleteAll = async () => {
+    try {
+      const token = localStorage.getItem('access');
+      await axios.delete(`${process.env.REACT_APP_HTTP_HOST}/chat/chat-history/`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setMessages([]);  // Clear messages from the state
+      console.log('All messages deleted.');
+    } catch (error) {
+      if (error.response.status === 401) navigate("/login");
+
+      console.error('Error deleting all messages:', error);
+    }
+  };
+
   const handleLogout = () => {
     // Your logout logic here
     localStorage.removeItem("access");
@@ -92,6 +110,7 @@ const Chat = () => {
             {showDebug ? 'Hide Debug' : 'Show Debug'}
           </button>
           <button onClick={handleLogout} className="logout-button">Logout</button>
+          <button onClick={handleDeleteAll} className="delete-all-button">Clear History</button>
           <select value={selectedVersion} onChange={handleVersionChange} className="version-select">
             <option value="v1">Version 1</option>
             <option value="v2">Version 2</option>
