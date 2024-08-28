@@ -39,7 +39,6 @@ const Chat = () => {
     fetchChatHistory();
 
     socketService.connect();
-
     socketService.onMessage(async (message) => {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -48,12 +47,13 @@ const Chat = () => {
       console.log(message)
       setDebugText((prev_text) => message.text.debug);
       if (isVoiceEnabled) {
+        window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(message.text.msg);
         window.speechSynthesis.speak(utterance);
       }
       setIsBotTyping(false);
     });
-  }, [isVoiceEnabled, navigate]);
+  }, [navigate]);
 
   const sendMessage = (message) => {
     setMessages((prevMessages) => [
@@ -87,6 +87,9 @@ const Chat = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     socketService.socket.close();
+    if (isVoiceEnabled) {
+      window.speechSynthesis.cancel();
+    }
     navigate('/login'); // Redirect to login page after logout
   };
 
