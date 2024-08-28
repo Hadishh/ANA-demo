@@ -5,14 +5,15 @@ import ChatInput from './ChatInput';
 import ChatMessages from './ChatMessages';
 import DebugBox from './DebugBox';
 import './Chat.css';
-import { delay } from './delay';
 import { useNavigate } from 'react-router-dom';
+
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [showDebug, setShowDebug] = useState(false);
   const [debugText, setDebugText] = useState(''); // This will contain the debug string
   const [isBotTyping, setIsBotTyping] = useState(false);
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
   const [selectedVersion, setSelectedVersion] = useState('v2');
   const navigate = useNavigate();
 
@@ -46,9 +47,13 @@ const Chat = () => {
       ]);
       console.log(message)
       setDebugText((prev_text) => message.text.debug);
+      if (isVoiceEnabled) {
+        const utterance = new SpeechSynthesisUtterance(message.text.msg);
+        window.speechSynthesis.speak(utterance);
+      }
       setIsBotTyping(false);
     });
-  }, []);
+  }, [isVoiceEnabled, navigate]);
 
   const sendMessage = (message) => {
     setMessages((prevMessages) => [
@@ -90,11 +95,18 @@ const Chat = () => {
   };
 
   const handleEdit = () => {
-    navigate("/editor")
+    window.open("/editor", "_blank");
   };
 
   const toggleDebugBox = () => {
     setShowDebug(!showDebug);
+  };
+
+  const toggleVoice = () => {
+    if (isVoiceEnabled) {
+      window.speechSynthesis.cancel(); // Stop current speech if toggling off
+    }
+    setIsVoiceEnabled(prevState => !prevState);
   };
 
   return (
@@ -105,12 +117,15 @@ const Chat = () => {
           <h1>🤖 ANA-Assistant 🤖</h1>
         </div>
         <div className="header-buttons">
-          <button onClick={handleEdit} className="logout-button">Prompt Editor</button>
+          <button onClick={handleEdit} className="logout-button">Editor</button>
           <button onClick={toggleDebugBox} className="toggle-debug-button">
             {showDebug ? 'Hide Debug' : 'Show Debug'}
           </button>
           <button onClick={handleLogout} className="logout-button">Logout</button>
-          <button onClick={handleDeleteAll} className="delete-all-button">Clear History</button>
+          <button onClick={handleDeleteAll} className="logout-button">Clear History</button>
+          <button onClick={toggleVoice} className="logout-button">
+            {isVoiceEnabled ? 'Disable Voice' : 'Enable Voice'}
+          </button>
           <select value={selectedVersion} onChange={handleVersionChange} className="version-select">
             <option value="v1">Version 1</option>
             <option value="v2">Version 2</option>
