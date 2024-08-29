@@ -39,6 +39,10 @@ const Chat = () => {
     fetchChatHistory();
 
     socketService.connect();
+
+  }, [navigate]);
+
+  useEffect(() => {
     socketService.onMessage(async (message) => {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -53,7 +57,7 @@ const Chat = () => {
       }
       setIsBotTyping(false);
     });
-  }, [navigate]);
+  }, [navigate, isVoiceEnabled]);
 
   const sendMessage = (message) => {
     setMessages((prevMessages) => [
@@ -87,9 +91,8 @@ const Chat = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     socketService.socket.close();
-    if (isVoiceEnabled) {
-      window.speechSynthesis.cancel();
-    }
+    window.speechSynthesis.cancel();
+
     navigate('/login'); // Redirect to login page after logout
   };
 
