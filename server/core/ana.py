@@ -184,12 +184,12 @@ class ChatbotV2:
         args = self.__exctract_args(function_call, "weather")
         print(args)
         if len(args) != 2:
-            args = " ".join(args)
+            args = " ".join(args) + " Edmonton"
             return weather.get_weather(args)
         city, day = tuple(args)
         return weather.get_weather_by_city(city, day)
 
-    def get_book_details(self, function_call):
+    def get_book_details(self, function_call, message):
         args = self.__exctract_args(function_call=function_call, function_name="book")
         try:
             book_name, chapter_num = tuple(args)
@@ -199,7 +199,10 @@ class ChatbotV2:
         except:
             book_name, chapter_num = "none", -1
         reader = BookReader(book_name, chapter_num, self.user)
-        return reader.read_book()
+        book_verification = Llama(self.user).book_verification(
+            message, self.chat_history, book_name
+        )
+        return reader.read_book(), book_verification
 
     def get_date(self, function_call):
         args = self.__exctract_args(function_call, function_name="date")
@@ -237,8 +240,15 @@ class ChatbotV2:
                     external_info = self.get_time(function_call)
                 elif "weather" in function_call:
                     external_info = self.get_weather(function_call)
-                elif "book" in function_call:
-                    return self.get_book_details(function_call), "read book"
+                elif "book(" in function_call:
+                    book_info, verified = self.get_book_details(function_call, message)
+                    if "yes" in verified:
+                        return (
+                            book_info,
+                            "read book",
+                        )
+                    else:
+                        external_info = book_info
                 elif "date" in function_call:
                     external_info = self.get_date(function_call)
             except Exception as e:

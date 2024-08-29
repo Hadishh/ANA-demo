@@ -226,4 +226,5 @@ V2_PROMPTS = [
     "core/static/prompts/v2/ana_v2_answer.txt",
     "core/static/prompts/v2/ana_v2_ask.txt",
     "core/static/prompts/v2/ana_v2_functions.txt",
+    "core/static/prompts/v2/ana_v2_book_verify.txt",
 ]

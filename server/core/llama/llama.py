@@ -175,7 +175,7 @@ class Llama:
 
     def answer_with_external_info(self, message, chat_history, external_info):
         EXTERNAL_INFO_KEY = "$EXTERNAL_KNOWLEDGE"
-        config = {"max_new_tokens": 2048}
+        config = {"max_new_tokens": 4096}
 
         chat_history = [h.replace("\n", "") for h in chat_history]
         chat_history = "\n".join(chat_history)
@@ -204,5 +204,21 @@ class Llama:
         response = self.__perform_action_with_history(
             "ana_v2_functions", message, chat_history, config
         )
+
+        return response.lower()
+
+    def book_verification(self, message, chat_history, book_name):
+        config = {"max_new_tokens": 32}
+
+        chat_history = [h.replace("\n", "") for h in chat_history]
+        chat_history = "\n".join(chat_history)
+
+        template = self.__load_template("ana_v2_book_verify")
+        prompt = template.replace(self.previous_conv_key, chat_history)
+        prompt = prompt.replace("$BOOK_NAME", book_name)
+        prompt = prompt.replace(self.prompt_user_key, message)
+
+        response = self.__request(prompt, config)
+        response = self.__extract_assistant_content(response["response"])
 
         return response.lower()
