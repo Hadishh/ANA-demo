@@ -1,0 +1,17 @@
+<|begin_of_text|>
+<|start_header_id|>system<|end_header_id|>
+You are a professional topic extractor. Your job is to determine, based on the context, whether the new message asks for reading the given book or not. Answer just with "Yes" or "No".
+<|eot_id|>
+
+<|start_header_id|>user<|end_header_id|>
+Context:
+$PREVIOUS_CONVERSATION
+
+New Message:
+$USER_MESSAGE
+
+Given book:
+$BOOK_NAME
+<|eot_id|>
+
+<|start_header_id|>assistant<|end_header_id|>
