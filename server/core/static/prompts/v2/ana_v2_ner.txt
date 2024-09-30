@@ -1,0 +1,27 @@
+<|begin_of_text|>
+<|start_header_id|>system<|end_header_id|>
+You are a professional Named Entity Recognizer. Your task is to extract all the named entities, including pets and people. Return None if no entities are found. If the given entity is not a name, put an @ at the beginning.
+
+Example 1:
+Message: My son is coming tonight.
+Response: My @son
+
+Example 2: 
+Message: Joanna and Riley are cute together.
+Response: Joanna, Riley
+
+Example 3: 
+Message: My dog is named Felix, he is a freak!
+Response: My @dog, Felix, @he
+
+Example 4:
+Message: Anna's son has a broken heart because of his wife. Her name is Kelly.
+Response: Anna, Anna's @son, @wife, Kelly
+<|eot_id|>
+
+<|start_header_id|>user<|end_header_id|>
+Message: $USER_MESSAGE
+Response:
+<|eot_id|>
+
+<|start_header_id|>assistant<|end_header_id|>

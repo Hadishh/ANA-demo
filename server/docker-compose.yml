@@ -59,7 +59,7 @@ services:
       - ./core/kg/import:/var/lib/neo4j/import
     environment:
       - NEO4J_AUTH=neo4j/neo4j1234
-
     entrypoint: [ "/bin/bash", "/scripts/neo4j_entrypoint.sh" ]
+
 volumes:
   postgres_data:
