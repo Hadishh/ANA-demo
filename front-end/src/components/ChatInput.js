@@ -11,7 +11,8 @@ const ChatInput = ({ sendMessage, isBotTyping }) => {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    console.log(isBotTyping);
+    if (event.key === 'Enter' && !event.shiftKey && !isBotTyping) {
       event.preventDefault();  // Prevents default behavior of Enter key
       handleSubmit(event);
     }
