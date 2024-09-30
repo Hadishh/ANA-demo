@@ -170,6 +170,10 @@ CHANNEL_LAYERS = {
 # ANA Core config
 LLAMA_API_URL = config("LLAMA_API_URL")
 
+# NEO4J config
+NEO4J_USER = config("NEO4J_USER")
+NEO4J_PASS = config("NEO4J_PASS")
+NEO4J_URL = config("NEO4J_BACKEND")
 
 # Prompts
 FUNCTIONALITY_CLF_PROMPT_PATH = os.path.join(
@@ -232,4 +236,6 @@ V2_PROMPTS = [
     "core/static/prompts/v2/ana_v2_ask.txt",
     "core/static/prompts/v2/ana_v2_functions.txt",
     "core/static/prompts/v2/ana_v2_book_verify.txt",
+    "core/static/prompts/v2/ana_v2_ner.txt",
+    "core/static/prompts/v2/ana_v2_information.txt",
 ]

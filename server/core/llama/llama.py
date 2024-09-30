@@ -4,19 +4,7 @@ from datetime import datetime
 import pytz
 from core.models import Prompts
 
-from config.settings.base import (
-    LLAMA_API_URL,
-    FUNCTIONALITY_CLF_PROMPT_PATH,
-    GREETING_PROMPT,
-    WEATHER_PROMPT_PATH,
-    INTENT_PROMPT_PATH,
-    BOOK_NAME_PROMPT_PATH,
-    OTHER_INQUIRY_PROMPT_PATH,
-    CONTEXT_PROMPT_PATH,
-    QUESTION_CATEGORIZATION_PROMPT_PATH,
-    CREATE_JOKE_PROMPT_PATH,
-    TIMING_REQ_PROMPT_PATH,
-)
+from config.settings.base import LLAMA_API_URL
 
 
 class Llama:
@@ -198,8 +186,17 @@ class Llama:
 
         return response.lower()
 
+    def get_information(self, message, chat_history):
+        config = {"max_new_tokens": 2048}
+
+        response = self.__perform_action_with_history(
+            "ana_v2_information", message, chat_history, config
+        )
+
+        return response
+
     def get_function_call(self, message, chat_history):
-        config = {"max_new_tokens": 32}
+        config = {"max_new_tokens": 128}
 
         response = self.__perform_action_with_history(
             "ana_v2_functions", message, chat_history, config
@@ -222,3 +219,10 @@ class Llama:
         response = self.__extract_assistant_content(response["response"])
 
         return response.lower()
+
+    def do_ner(self, message, chat_history):
+        config = {"max_new_tokens": 64}
+
+        return self.__perform_action_with_history(
+            "ana_v2_ner", message, chat_history, config
+        )

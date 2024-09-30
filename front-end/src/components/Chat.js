@@ -52,7 +52,15 @@ const Chat = () => {
       setDebugText((prev_text) => message.text.debug);
       if (isVoiceEnabled) {
         window.speechSynthesis.cancel();
+
+        // Get available voices
+        const voices = window.speechSynthesis.getVoices();
+
+        // Find a female voice, you can adjust this logic to select specific ones
+        const femaleVoice = voices.find(voice => voice.gender === 'female') || voices.find(voice => voice.name.includes('Female')) || voices[0];
+
         const utterance = new SpeechSynthesisUtterance(message.text.msg);
+        utterance.voice = femaleVoice;
         window.speechSynthesis.speak(utterance);
       }
       setIsBotTyping(false);

@@ -48,5 +48,18 @@ services:
       - redis
       - webapp
 
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./core/kg/scripts:/scripts
+      - ./core/kg/import:/var/lib/neo4j/import
+    environment:
+      - NEO4J_AUTH=neo4j/neo4j1234
+    entrypoint: [ "/bin/bash", "/scripts/neo4j_entrypoint.sh" ]
+
 volumes:
   postgres_data:

@@ -1,5 +1,6 @@
 import os
 import pytz
+import re
 from datetime import datetime
 
 from core.llama.llama import Llama
@@ -8,6 +9,7 @@ from core.library.book_reading import BookReader
 from core.utils import get_location_and_time, detect_day1
 from config.settings.base import HELP_RESPONSE_PATH
 from chat.models import Message
+from core.kg.personal_kg import KnowledgeGraph
 
 
 class ChatBot:
@@ -151,9 +153,26 @@ class ChatbotV2:
             "what else can you do?",
             "what can you do for me?",
         ]
-        self.yes_or_no = ["yes", "yeah", "no", "nah"]
+
+        self.KG = KnowledgeGraph("Arthur", "Morgan")
         with open(HELP_RESPONSE_PATH, "r") as f:
             self.help_response = f.read()
+
+    def __extract_function_calls(self, llm_output: str):
+        pattern = r"<RESOURCE_CALLS>(.*?)(?:</RESOURCE_CALLS>|$)"
+        match = re.search(pattern, llm_output, re.DOTALL)
+        if match:
+            pattern = r"@[\w_]+\([^\)]+\)"
+            matches = re.findall(pattern, match.group(1).strip())
+            # Extract and clean up the function calls (removing extra whitespace)
+            calls_str = "\n".join(matches)
+            self.debug += (
+                f"\nRequired function calls for this message is: \n{calls_str}"
+            )
+            return matches
+        else:
+            self.debug += "\nNo function call required"
+            return []
 
     def __exctract_args(self, function_call: str, function_name: str):
 
@@ -172,8 +191,30 @@ class ChatbotV2:
 
         return args
 
+    def _process_external_calls(self, calls: list[str], message):
+        info = []
+        for call in calls:
+            try:
+                if "@knowledge_graph" in call.lower():
+                    info.append(self.knowledge_graph_call(call))
+                if "@weather" in call.lower():
+                    info.append(self.get_weather(call))
+                if "@book" in call.lower():
+                    info.append(self.get_book_details(call, message)[0])
+                if "@time" in call.lower():
+                    info.append(self.get_time(call))
+                if "@date" in call.lower():
+                    info.append(self.get_date(call))
+            except:
+                self.debug += "Exception occured calling : " + call + "\n\n"
+
+        return info
+
+    def knowledge_graph_call(self, function_call: str):
+        return "Graph info"
+
     def get_time(self, function_call: str):
-        args = self.__exctract_args(function_call, "current_time")
+        args = self.__exctract_args(function_call, "@TIME")
         city_name = args[0]
         if city_name == "":
             city_name = "Edmonton"
@@ -181,16 +222,18 @@ class ChatbotV2:
 
     def get_weather(self, function_call: str):
         weather = Weather()
-        args = self.__exctract_args(function_call, "weather")
+        args = self.__exctract_args(function_call, "@WEATHER")
         print(args)
         if len(args) != 2:
             args = " ".join(args) + " Edmonton"
             return weather.get_weather(args)
         city, day = tuple(args)
+        if "?" in city:
+            city = "Edmonton"
         return weather.get_weather_by_city(city, day)
 
     def get_book_details(self, function_call, message):
-        args = self.__exctract_args(function_call=function_call, function_name="book")
+        args = self.__exctract_args(function_call=function_call, function_name="@BOOK")
         try:
             book_name, chapter_num = tuple(args)
             chapter_num = (
@@ -205,70 +248,48 @@ class ChatbotV2:
         return reader.read_book(), book_verification
 
     def get_date(self, function_call):
-        args = self.__exctract_args(function_call, function_name="date")
+        args = self.__exctract_args(function_call, function_name="@DATE")
 
         if len(args) == 1:
             day = args[0]
-            return Llama(self.user).report_datetime(f"What is the date of {day}?")
+            return Llama(self.user).report_time(f"What is the date of {day}?")
         else:
             return Llama(self.user).report_datetime(f"What is the date of today?")
 
     def answer(self, message):
+
         for help_ in self.help_cmds:
             if help_ in message.lower():
                 return self.help_response, "other"
 
         llama = Llama(self.user)
-        answer = llama.ask_if_answer(
-            message, self.chat_history[-min(len(self.chat_history), 4) :]
-        )
 
-        if "no" in answer:
-            function_call = llama.get_function_call(
-                message, self.chat_history[-min(len(self.chat_history), 4) :]
-            )
-            self.debug = (
-                f"The bot cannot ansewr, doing a function call {function_call}:\n"
-            )
+        infor = llama.get_information(message, self.chat_history)
+        calls = self.__extract_function_calls(infor)
+        print(f"INFORMATION: {infor}")
 
-            external_info = str()
-            try:
-                if "none" in function_call or "recipe" in function_call:
-                    self.debug += "Resuming the conversation, none of the function calls can help. \n"
-                    return llama.other_inquiry(message, self.chat_history), "other"
-                elif "current_time" in function_call:
-                    external_info = self.get_time(function_call)
-                elif "weather" in function_call:
-                    external_info = self.get_weather(function_call)
-                elif "book(" in function_call:
-                    book_info, verified = self.get_book_details(function_call, message)
-                    if "yes" in verified:
-                        return (
-                            book_info,
-                            "read book",
-                        )
-                    else:
-                        external_info = book_info
-                elif "date" in function_call:
-                    external_info = self.get_date(function_call)
-            except Exception as e:
-                self.debug += f"Exception occured: {str(e)}"
-                print(f"Exception: {str(e)}")
-                return llama.other_inquiry(message, self.chat_history), "other"
-            self.debug += f"\n Got the external info: \n\n{external_info}\n\n Possible responses:\n\n"
-            RESPONSES = 1
-            responses = []
-
-            for i in range(RESPONSES):
-                new_resp = llama.answer_with_external_info(
-                    message, self.chat_history, external_info
-                )
-                responses.append(new_resp)
-                self.debug += f"Response {i}: \n {new_resp}\n\n"
-
-            return random.choice(responses), "other"
-
-        elif "yes" in answer:
-            self.debug = f"The bot can ansewr, resuming the conversation.\n"
+        try:
+            external_info = self._process_external_calls(calls, message)
+        except Exception as e:
+            self.debug += f"Exception occured: {str(e)}"
+            print(f"Exception: {str(e)}")
             return llama.other_inquiry(message, self.chat_history), "other"
-        return answer, "other"
+        self.debug += (
+            f"\n Got the external info: \n\n{external_info}\n\n Possible responses:\n\n"
+        )
+        RESPONSES = 1
+        responses = []
+
+        for i in range(RESPONSES):
+            new_resp = llama.answer_with_external_info(
+                message, self.chat_history, str(external_info)
+            )
+            responses.append(new_resp)
+            self.debug += f"Response {i}: \n {new_resp}\n\n"
+
+        return random.choice(responses), "other"
+
+        # elif "yes" in answer:
+        #     self.debug = f"The bot can ansewr, resuming the conversation.\n"
+        #     return llama.other_inquiry(message, self.chat_history), "other"
+        # return answer, "other"
