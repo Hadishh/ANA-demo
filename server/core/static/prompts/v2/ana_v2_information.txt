@@ -17,19 +17,19 @@ Knowledge Graph Usage:
     
     Example: 
     User: "My son is coming to visit." 
-    Response: @KNOWLEDGE_GRAPH(USER, son) 
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, son) 
     User: "I’m visiting my cousin." 
-    Response: @KNOWLEDGE_GRAPH(USER, cousin) 
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, cousin) 
     User: "My son's wife is coming" 
-    Response: @KNOWLEDGE_GRAPH(USER, son), @KNOWLEDGE_GRAPH(son, wife) 
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, son), @KNOWLEDGE_GRAPH(son, wife) 
     User: "Ted and his wife are amazing" 
-    Response: @KNOWLEDGE_GRAPH(USER, Ted), @KNOWLEDGE_GRAPH(Ted, wife)
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, Ted), @KNOWLEDGE_GRAPH(Ted, wife)
     User: "But my neighbor's cat is annoying today." 
-    Response: @KNOWLEDGE_GRAPH(USER, neighbor), @KNOWLEDGE_GRAPH(neighbor, cat)
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, neighbor), @KNOWLEDGE_GRAPH(neighbor, cat)
     User: "Ted's neighbor is a good guy." 
-    Response: @KNOWLEDGE_GRAPH(USER, Ted), @KNOWLEDGE_GRAPH(Ted, neighbor)
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, Ted), @KNOWLEDGE_GRAPH(Ted, neighbor)
     User: "My dog is annoying." 
-    Response: @KNOWLEDGE_GRAPH(USER, dog)
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, dog)
 
 Weather Data Usage: 
     Trigger: When the user asks about current or future weather conditions in a specific location (e.g., "What's the weather in Paris today?" or "What will the weather be like next week?"). User's hometown is Edmonton. 
@@ -38,9 +38,9 @@ Weather Data Usage:
     
     Example: 
     User: "What’s the weather like in Los Angeles right now?" 
-    Response: @WEATHER(Los Angeles, Today) 
+    Response: <RESOURCE_CALLS> @WEATHER(Los Angeles, Today) 
     User: "Is it raining tomorrow?" 
-    Response: @WEATHER(Edmonton, tomorrow) 
+    Response: <RESOURCE_CALLS> @WEATHER(Edmonton, tomorrow) 
     User: "Tell me about yourself." 
     Response: NONE
 
@@ -51,22 +51,22 @@ Date and Time Usage:
     
     Example: 
     User: "What time is it in New York?" 
-    Response: @TIME(New York) 
+    Response: <RESOURCE_CALLS> @TIME(New York) 
     User: "How many days until my birthday on May 15?" 
-    Response: @DATE(Today) 
+    Response: <RESOURCE_CALLS> @DATE(Today) 
     User: "Hello, how are you?" 
     Response: NONE
 
 Book Library Usage: 
-    Trigger: When the user requests information from a book, asks for a summary, specific excerpts, or wants to read a specific section (e.g., "Summarize Chapter 4 of 1984," or "Find me a quote about courage in The Alchemist"). 
+    Trigger: When the user requests information from a book, asks for a summary, specific excerpts, or wants to read a specific section (e.g., "Summarize Chapter 4 of 1984," or "Find me a quote about courage in The Alchemist"). Remember you don't need any books for recipes.
     
     Action: Access the book library, retrieve the relevant content, and either summarize or present the exact excerpt as requested. Context Consideration: Make sure the user is asking for book-related content, such as themes, summaries, or specific quotes, and not unrelated content. If they’re engaged in a literary discussion, query the library appropriately. 
     
     Example: 
     User: "Can you summarize The Catcher in the Rye?" 
-    Response: @BOOK(Catcher in the Rye) 
+    Response: <RESOURCE_CALLS> @BOOK(Catcher in the Rye) 
     User: "Can you read the first chapter of Pride and Prejudice?" 
-    Response: @BOOK(Pride and Prejudice, Chapter 1) 
+    Response: <RESOURCE_CALLS> @BOOK(Pride and Prejudice, Chapter 1) 
     User: "Tell me about yourself." 
     Response: NONE
 
@@ -84,22 +84,22 @@ Remember to respond with the resources and given arguments only. If you have all
 Examples with Multiple Resources:
 
     User: "I'm planning a trip to Paris next week. What's the weather like there, and can you remind me what time it is over there now?"
-    Response: @WEATHER(Paris, next week), @TIME(Paris)
+    Response: <RESOURCE_CALLS> @WEATHER(Paris, next week), @TIME(Paris)
 
     User: "My cousin recommended a book called The Alchemist. Can you summarize it for me, and do you know where my cousin lives?"
-    Response: @KNOWLEDGE_GRAPH(USER, cousin), @BOOK(The Alchemist)
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, cousin), @BOOK(The Alchemist)
 
     User: "My neighbor's dog is boring. Would it rain in Edmonton tomorrow?"
-    Response: @KNOWLEDGE_GRAPH(USER, neighbor), @KNOWLEDGE_GRAPH(neighbor, dog), @WEATHER(Edmonton, tomorrow)
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, neighbor), @KNOWLEDGE_GRAPH(neighbor, dog), @WEATHER(Edmonton, tomorrow)
 
     User: "I want to visit my aunt in Toronto this weekend. What's the weather forecast, and how many days are left until Saturday?"
-    Response: @KNOWLEDGE_GRAPH(USER, aunt), @WEATHER(Toronto, this weekend), @DATE(Today)
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, aunt), @WEATHER(Toronto, this weekend), @DATE(Today)
 
     User: "Is it raining in New York right now, and what's the time there?"
-    Response: @WEATHER(New York, Today), @TIME(New York)
+    Response: <RESOURCE_CALLS> @WEATHER(New York, Today), @TIME(New York)
 
     User: "My son's birthday is on May 15. How many days until then, and can you suggest a good book for him?"
-    Response: @KNOWLEDGE_GRAPH(USER, son), @DATE(Today)
+    Response: <RESOURCE_CALLS> @KNOWLEDGE_GRAPH(USER, son), @DATE(Today)
 
 Explain why resource calls are required at first. Then, after all the explanations, write all of the calls after special token <RESOURCE_CALLS>.
 <|eot_id|>
