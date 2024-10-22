@@ -6,15 +6,21 @@ import datetime
 
 class KnowledgeGraph:
 
-    def __parse_entity(entity: dict):
+    def __parse_entity(self, entity: dict):
         if "personId" in entity:
-            month, day, year = map(int, entity["birth_date"].split("/"))
-            age = datetime.date.today().year - year
-            gender = "Male" if entity["gender"] == "M" else "Female"
-            details = f"Full Name: {entity['first_name']} {entity['last_name']}\nAge: {age}\nPhone Number: {entity['phone_number']}"
+            if entity["first_name"] == "Arthur" and entity["last_name"] == "Morgan":
+                details = "USER"
+            # month, day, year = map(int, entity["birth_date"].split("/"))
+            # age = datetime.date.today().year - year
+            # gender = "Male" if entity["gender"] == "M" else "Female"
+            # details = f"Full Name: {entity['first_name']} {entity['last_name']}\nAge: {age}\nPhone Number: {entity['phone_number']}"
+            else:
+                details = entity["first_name"]
         elif "petId" in entity:
 
-            details = f"Name: {entity['name']}\nAge: {entity['age']}\nSpecies: {entity['species']}\nColor: {entity['color']}"
+            # details = f"Name: {entity['name']}\nAge: {entity['age']}\nSpecies: {entity['species']}\nColor: {entity['color']}"
+            details = entity["name"]
+
         return details
 
     def __init__(self, first_name, last_name) -> None:
@@ -36,12 +42,6 @@ class KnowledgeGraph:
         self.entities = []
         self.relations = []
 
-    def get_all_related_to_person(self, relation_type, parentId):
-        records, _, _ = self.driver.execute_query(
-            f"MATCH (tgt)-[r:{relation_type}]->(p:Person {{personId: {parentId}}}) return p, tgt"
-        )
-        return records
-
     def get_persons_by_full_name(self, first_name, last_name):
         records, _, _ = self.driver.execute_query(
             "MATCH (p:Person {first_name: $first_name, last_name: $last_name}) RETURN p LIMIT 1",
@@ -50,65 +50,26 @@ class KnowledgeGraph:
         )
         return records
 
-    def get_persons_by_first_name(self, name):
-        records, _, _ = self.driver.execute_query(
-            "MATCH (p:Person {first_name: $name}) RETURN p", name=name
-        )
-        return records
+    def get_kg_data(self):
+        with self.driver.session() as session:
+            result = session.run(
+                """
+                MATCH (n)-[r]->(m)
+                RETURN DISTINCT n, r, m
+            """
+            )
+            data = [
+                (record.data()["n"], record.data()["r"], record.data()["m"])
+                for record in result
+            ]
 
-    def get_person_by_id(self, id):
-        records, _, _ = self.driver.execute_query(
-            "MATCH (p:Person {personId: $id}) RETURN p", id=id
-        )
-        return records
-
-    def __process_entity(self, entity, parent=None):
-        if "@" in entity:
-            entity = entity.replace("@", "")
-            relation = None
-            for key in self.relativity:
-                if entity in key:
-                    relation = entity, key
-                    break
-                for rel in self.relativity[key][0]:
-                    if entity in rel:
-                        relation = entity, key
-            # TODO get all the relations depending on the pronoun
-            if relation:
-                res = self.get_all_related_to_person(
-                    self.relativity[relation[1]][1], parent["personId"]
-                )
-                for rel in res:
-                    self.entities.append(self.__parse_entity(rel["p"]))
-                    self.entities.append(self.__parse_entity(rel["tgt"]))
-                    name2 = f"{rel['p']['first_name']} {rel['p']['last_name']}"
-                    if "pet" in relation[1].lower():
-                        name1 = rel["tgt"]["name"]
-                        self.relations.append(f"{name1} is {relation[1]} of {name2}")
-                    else:
-                        name1 = f"{rel['tgt']['first_name']} {rel['tgt']['last_name']}"
-                        self.relations.append(f"{name1} is {relation[1]} of {name2}")
-
-        else:
-            #   MATCH path = shortestPath((startNode:Person {personId:1})-[*..2]-(endNode:Person {personId:2}))
-            #   RETURN path
-            # TODO get all the entities connected to the user
-            pass
-
-    def process_entities(self, entities: str):
-        entities = entities.split(",")
-        print(entities)
-        if "None" in entities:
-            return []
-
-        for entity in entities:
-            sub_entities = [en.replace("'s", "") for en in entity.split()]
-            parent = self.main_user
-            for sub_entity in sub_entities:
-                records = self.__process_entity(sub_entity, parent)
-
-    def process_function_call(self, args):
-        return None
+        triples = []
+        for _, r, _ in data:
+            e1, r, e2 = r
+            triples.append(
+                f"{self.__parse_entity(e1)} {r.lower()} {self.__parse_entity(e2)}"
+            )
+        return triples
 
     def __del__(self):
         self.driver.close()

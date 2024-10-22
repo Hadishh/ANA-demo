@@ -193,25 +193,28 @@ class ChatbotV2:
 
     def _process_external_calls(self, calls: list[str], message):
         info = []
+        kg_done = False
         for call in calls:
-            try:
-                if "@knowledge_graph" in call.lower():
-                    info.append(self.knowledge_graph_call(call))
-                if "@weather" in call.lower():
-                    info.append(self.get_weather(call))
-                if "@book" in call.lower():
-                    info.append(self.get_book_details(call, message)[0])
-                if "@time" in call.lower():
-                    info.append(self.get_time(call))
-                if "@date" in call.lower():
-                    info.append(self.get_date(call))
-            except:
-                self.debug += "Exception occured calling : " + call + "\n\n"
+            # try:
+            if "@knowledge_graph" in call.lower() and not kg_done:
+                info.append(self.knowledge_graph_call(call))
+                kg_done = True
+            if "@weather" in call.lower():
+                info.append(self.get_weather(call))
+            if "@book" in call.lower():
+                info.append(self.get_book_details(call, message)[0])
+            if "@time" in call.lower():
+                info.append(self.get_time(call))
+            if "@date" in call.lower():
+                info.append(self.get_date(call))
+            # except:
+            #     self.debug += "Exception occured calling : " + call + "\n\n"
 
         return info
 
     def knowledge_graph_call(self, function_call: str):
-        return "Graph info"
+        data = self.KG.get_kg_data()
+        return data
 
     def get_time(self, function_call: str):
         args = self.__exctract_args(function_call, "@TIME")
